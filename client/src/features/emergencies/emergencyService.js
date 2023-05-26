@@ -1,6 +1,6 @@
 import axios from "../../api/axios";
 
-const API_URL = "/api/emergency/";
+const API_URL = "api/emergency/";
 
 // create Emergency
 const createEmergency = async (emergencyData, token) => {

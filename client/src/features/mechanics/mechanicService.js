@@ -1,6 +1,6 @@
 import axios from "../../api/axios";
 
-const API_URL = "/api/mechanic/";
+const API_URL = "api/mechanic/";
 
 // create Mechanic
 const createMechanic = async (mechanicData, token) => {

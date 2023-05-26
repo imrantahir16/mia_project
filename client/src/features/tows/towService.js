@@ -1,6 +1,6 @@
 import axios from "../../api/axios";
 
-const API_URL = "/api/tows/";
+const API_URL = "api/tows/";
 
 // create Tow
 const createTow = async (towData, token) => {

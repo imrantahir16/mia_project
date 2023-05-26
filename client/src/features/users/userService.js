@@ -1,6 +1,6 @@
 import axios from "../../api/axios";
 
-const API_URL = "/api/users/";
+const API_URL = "api/users/";
 
 // get user goals
 const getAllUsers = async (token) => {

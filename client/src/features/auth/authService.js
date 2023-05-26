@@ -1,6 +1,6 @@
 import axios from "../../api/axios";
 
-const API_URL = "/api/auth/";
+const API_URL = "api/auth/";
 
 // register user
 const register = async (userData) => {
