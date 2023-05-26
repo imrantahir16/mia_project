@@ -59,10 +59,10 @@ const Users = () => {
                   <tr key={user._id}>
                     <th scope="row">
                       {console.log(
-                        `${process.env.REACT_APP_API_BASE_URL}/api/${user.profileImage}`
+                        `${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`
                       )}
                       <img
-                        src={`${process.env.REACT_APP_API_BASE_URL}/api/${user.profileImage}`}
+                        src={`${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`}
                         alt={user.name}
                       />
                     </th>
