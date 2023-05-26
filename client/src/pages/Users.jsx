@@ -62,7 +62,7 @@ const Users = () => {
                         `${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`
                       )}
                       <img
-                        src={`${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`}
+                        src={`../../../api/${user.profileImage}`}
                         alt={user.name}
                       />
                     </th>
