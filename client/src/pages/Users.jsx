@@ -46,7 +46,6 @@ const Users = () => {
           >
             <thead>
               <tr>
-                <th scope="col">Profile</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Phone</th>
@@ -57,15 +56,6 @@ const Users = () => {
               {users.map((user) => {
                 return (
                   <tr key={user._id}>
-                    <th scope="row">
-                      {console.log(
-                        `${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`
-                      )}
-                      <img
-                        src={`../../../api/${user.profileImage}`}
-                        alt={user.name}
-                      />
-                    </th>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.phone}</td>
