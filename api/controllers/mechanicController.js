@@ -5,7 +5,7 @@ const getAllMechanics = async (req, res) => {
   console.log(req.userId);
   const mechanics = await Mechanic.find();
   if (!mechanics)
-    return res.status(204).json({ message: "No Mechanic contact found" });
+    return res.status(404).json({ message: "No Mechanic contact found" });
 
   const filteredMechanics = mechanics.filter(
     (c) => c.addedBy === ROLES_LIST.Admin || c.userId.toString() === req.userId
@@ -19,15 +19,16 @@ const getMechanic = async (req, res) => {
 
   const mechanic = await Mechanic.findOne({
     _id: req.params.id,
-    userId: req.userId,
   }).exec();
-  if (!mechanic) {
+  if (!mechanic)
     return res
       .status(404)
       .json({ message: `Mechanic ID ${req.params.id} not found` });
-  } else {
-    res.json(mechanic);
-  }
+
+  if (mechanic.userId.toString() !== req.userId)
+    return res.status(401).json({ message: `Unathorized to get this contact` });
+
+  res.json(mechanic);
 };
 
 const createMechanic = async (req, res) => {
@@ -60,12 +61,16 @@ const deleteMechanic = async (req, res) => {
     return res.status(400).json({ message: "Mechanic Id is required" });
   const mechanic = await Mechanic.findOne({
     _id: req.params.id,
-    userId: req.userId,
   }).exec();
   if (!mechanic)
     return res
       .status(404)
       .json({ message: `Mechanic ID ${req.params.id} not found` });
+
+  if (mechanic.userId.toString() !== req.userId)
+    return res
+      .status(401)
+      .json({ message: `Unauthorized to remove this contact` });
   const result = await mechanic.deleteOne({ _id: req.params.id });
   res.json(result);
 };
@@ -73,12 +78,17 @@ const deleteMechanic = async (req, res) => {
 const updateMechanic = async (req, res) => {
   const mechanic = await Mechanic.findOne({
     _id: req.params.id,
-    userId: req.userId,
   });
   if (!mechanic)
     return res.status(404).json({
       message: `Mechanic contact of ID ${req.params.id} does not exist`,
     });
+
+  if (mechanic.userId.toString() !== req.userId)
+    return res.status(401).json({
+      message: `Unauthorized to update this contact`,
+    });
+
   if (req.body.name) mechanic.name = req.body.name;
   if (req.body.contact) mechanic.contact = req.body.contact;
   const result = await mechanic.save();

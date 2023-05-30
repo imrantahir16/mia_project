@@ -34,9 +34,15 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    licenseExpiry: {
+      type: Date,
+    },
     insurance: {
       type: String,
       default: "",
+    },
+    insuranceExpiry: {
+      type: Date,
     },
     profileImage: {
       type: String,

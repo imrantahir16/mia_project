@@ -35,8 +35,8 @@ app.use(origin);
 app.use(cors(corsOptions));
 
 // static file
-app.use("/", express.static(path.join(__dirname, "/public")));
-app.use("/images", express.static(path.join(__dirname, "public/images")));
+app.use("/public", express.static(path.join(__dirname, "/public")));
+// app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 // built-in middleware
 app.use(express.json());

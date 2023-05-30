@@ -6,8 +6,6 @@ const {
   getMechanic,
   updateMechanic,
 } = require("../controllers/mechanicController");
-const ROLES_LIST = require("../config/roles_list");
-const verifyRoles = require("../middleware/verifyRoles");
 const { validateContactData } = require("../middleware/validationMiddleware");
 
 router
@@ -18,7 +16,7 @@ router
 router
   .route("/:id")
   .get(getMechanic)
-  .put(verifyRoles(ROLES_LIST.Admin), validateContactData, updateMechanic)
-  .delete(verifyRoles(ROLES_LIST.Admin), deleteMechanic);
+  .put(validateContactData, updateMechanic)
+  .delete(deleteMechanic);
 
 module.exports = router;

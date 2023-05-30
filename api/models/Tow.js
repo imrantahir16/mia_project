@@ -13,6 +13,14 @@ const towSchema = new Schema(
       required: true,
       unique: true,
     },
+    addedBy: {
+      type: Number,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "user",
+    },
   },
   { timestamps: true }
 );

@@ -12,6 +12,14 @@ const emergencySchema = new Schema(
       type: String,
       required: true,
     },
+    addedBy: {
+      type: Number,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "user",
+    },
   },
   { timestamps: true }
 );

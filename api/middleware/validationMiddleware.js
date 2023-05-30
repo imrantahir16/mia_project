@@ -95,7 +95,11 @@ const validateEmailData = [
 
 const validateContactData = [
   body("name").notEmpty().withMessage("Name is required"),
-  body("contact").notEmpty().withMessage("Contact number is required"),
+  body("contact")
+    .notEmpty()
+    .withMessage("Contact number is required")
+    .isInt()
+    .withMessage("Contact must be a number"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

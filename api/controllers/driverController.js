@@ -15,6 +15,13 @@ const infoUploader = async (req, res) => {
 
   try {
     if (req.files.license) {
+      if (!req.body.licenseExpiry)
+        return res.status(400).json({ message: "License expiry is required" });
+
+      // console.log(req.body.licenseExpiry);
+      // console.log("licenseExpiry");
+      user.licenseExpiry = req.body.licenseExpiry;
+
       if (user.drivingLicense !== "") {
         const filePath = `${user.drivingLicense}`;
         fs.unlink(filePath, async (error) => {
@@ -24,9 +31,18 @@ const infoUploader = async (req, res) => {
         });
       }
       // const filename = `${req.files.license[0].filename}`;
+
       user.drivingLicense = `${req.files.license[0].path}`;
     }
     if (req.files.insurance) {
+      if (!req.body.insuranceExpiry)
+        return res
+          .status(400)
+          .json({ message: "Insurance expiry is required" });
+
+      // console.log(req.body.insuranceExpiry);
+      // console.log("insuranceExpiry");
+      user.insuranceExpiry = req.body.insuranceExpiry;
       if (user.insurance !== "") {
         const filePath = `${user.insurance}`;
         fs.unlink(filePath, async (error) => {
@@ -37,6 +53,7 @@ const infoUploader = async (req, res) => {
         });
       }
       // const filename = `${req.files.insurance[0].filename}`;
+
       user.insurance = `${req.files.insurance[0].path}`;
     }
     await user.save();
@@ -60,6 +77,7 @@ const licenseRemover = async (req, res) => {
         return res.status(500).json({ message: `File does not exist` });
       } else {
         user.drivingLicense = "";
+        user.licenseExpiry = null;
         await user.save();
         return res.status(200).json({ message: "File removed successful" });
       }
@@ -82,6 +100,7 @@ const insuranceRemover = async (req, res) => {
         return res.status(500).json({ message: `File does not exist` });
       } else {
         user.insurance = "";
+        user.insuranceExpiry = null;
         await user.save();
         res.status(200).json({ message: "File removed successful" });
       }
