@@ -1,34 +1,56 @@
+const ROLES_LIST = require("../config/roles_list");
 const Mechanic = require("../models/Mechanic");
 
 const getAllMechanics = async (req, res) => {
+  console.log(req.userId);
   const mechanics = await Mechanic.find();
   if (!mechanics)
     return res.status(204).json({ message: "No Mechanic contact found" });
-  res.json(mechanics);
+
+  const filteredMechanics = mechanics.filter(
+    (c) => c.addedBy === ROLES_LIST.Admin || c.userId.toString() === req.userId
+  );
+  res.json(filteredMechanics);
 };
 
 const getMechanic = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Mechanic id is required" });
-  const mechanic = await Mechanic.findOne({ _id: req.params.id }).exec();
-  if (!mechanic)
+
+  const mechanic = await Mechanic.findOne({
+    _id: req.params.id,
+    userId: req.userId,
+  }).exec();
+  if (!mechanic) {
     return res
       .status(404)
       .json({ message: `Mechanic ID ${req.params.id} not found` });
-  res.json(mechanic);
+  } else {
+    res.json(mechanic);
+  }
 };
 
 const createMechanic = async (req, res) => {
   const { name, contact } = req.body;
-
+  let result;
   const foundMechanic = await Mechanic.findOne({ contact }).exec();
   if (foundMechanic)
     return res.status(409).json({ message: "Mechanic contact already exists" });
 
-  const result = await Mechanic.create({
-    name,
-    contact,
-  });
+  if (req.roles[1] !== ROLES_LIST.Admin) {
+    result = await Mechanic.create({
+      name,
+      contact,
+      userId: req.userId,
+    });
+  } else {
+    result = await Mechanic.create({
+      name,
+      contact,
+      addedBy: req.roles[1],
+      userId: req.userId,
+    });
+  }
 
   res.status(201).json(result);
 };
@@ -36,7 +58,10 @@ const createMechanic = async (req, res) => {
 const deleteMechanic = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Mechanic Id is required" });
-  const mechanic = await Mechanic.findOne({ _id: req.params.id }).exec();
+  const mechanic = await Mechanic.findOne({
+    _id: req.params.id,
+    userId: req.userId,
+  }).exec();
   if (!mechanic)
     return res
       .status(404)
@@ -46,7 +71,10 @@ const deleteMechanic = async (req, res) => {
 };
 
 const updateMechanic = async (req, res) => {
-  const mechanic = await Mechanic.findOne({ _id: req.params.id });
+  const mechanic = await Mechanic.findOne({
+    _id: req.params.id,
+    userId: req.userId,
+  });
   if (!mechanic)
     return res.status(404).json({
       message: `Mechanic contact of ID ${req.params.id} does not exist`,

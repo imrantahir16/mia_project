@@ -13,7 +13,7 @@ const { validateContactData } = require("../middleware/validationMiddleware");
 router
   .route("/")
   .get(getAllMechanics)
-  .post(verifyRoles(ROLES_LIST.Admin), validateContactData, createMechanic);
+  .post(validateContactData, createMechanic);
 
 router
   .route("/:id")

@@ -105,7 +105,7 @@ app.get("/api/config", (req, res) => {
   });
 });
 
-app.post("/api/create-checkout-session", async (req, res) => {
+app.post("api/create-checkout-session", async (req, res) => {
   console.log(req.body.lookup_key);
   const prices = await stripe.prices.list({
     lookup_keys: [req.body.lookup_key],
@@ -122,12 +122,13 @@ app.post("/api/create-checkout-session", async (req, res) => {
       },
     ],
     mode: "subscription",
-    success_url: `http://localhost:3000/?success=true&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `http://localhost:3000/?canceled=true`,
+    success_url: `${process.env.BASE_URL}/?success=true&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.BASE_URL}/?canceled=true`,
   });
   console.log("session", session.line_items);
 
-  res.redirect(303, session.url);
+  res.send("got here");
+  // res.redirect(303, session.url);
 });
 
 app.post("/api/create-portal-session", async (req, res) => {
@@ -138,7 +139,7 @@ app.post("/api/create-portal-session", async (req, res) => {
 
   // This is the url to which the customer will be redirected when they are done
   // managing their billing with the portal.
-  const returnUrl = "http://localhost:3000/";
+  const returnUrl = process.env.BASE_URL;
 
   const portalSession = await stripe.billingPortal.sessions.create({
     customer: checkoutSession.customer,
