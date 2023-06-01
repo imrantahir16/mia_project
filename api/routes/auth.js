@@ -1,7 +1,10 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const { loginUser } = require("../controllers/loginController");
+const {
+  loginUser,
+  verifyUserAccount,
+} = require("../controllers/loginController");
 const { registerUser } = require("../controllers/registerController");
 const {
   validateRegisterData,
@@ -10,6 +13,7 @@ const {
 
 router.post("/register", validateRegisterData, registerUser);
 router.post("/login", validateLoginData, loginUser);
+router.get("/confirm/:confirmationCode", verifyUserAccount);
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
@@ -28,7 +32,7 @@ router.get(
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" },
+      { expiresIn: "30h" },
       (error, accessToken) => {
         if (error) {
           return res.json({

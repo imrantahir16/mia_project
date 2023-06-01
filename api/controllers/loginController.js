@@ -12,6 +12,11 @@ const loginUser = async (req, res) => {
     const match = await bcrypt.compare(password, foundUser.password);
     if (!match) return res.status(400).json({ message: "Incorrect password" });
 
+    if (foundUser.status != "Active")
+      return res.status(401).send({
+        message: "Pending Account. Please Verify Your Email!",
+      });
+
     const roles = Object.values(foundUser.roles).filter(Boolean);
     const accessToken = jwt.sign(
       {
@@ -29,4 +34,16 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser };
+const verifyUserAccount = async (req, res) => {
+  const user = await User.findOne({
+    confirmationCode: req.params.confirmationCode,
+  });
+
+  if (!user) return res.status(404).send({ message: "User Not found." });
+
+  user.status = "Active";
+  const result = await user.save();
+  res.status(200).json({ message: "Account verified" });
+};
+
+module.exports = { loginUser, verifyUserAccount };

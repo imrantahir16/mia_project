@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Token = require("../models/Token");
-const sendEmail = require("../utils/sendEmail");
+const { sendResetPasswordEmail } = require("../utils/sendEmail");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 
@@ -20,8 +20,8 @@ const sendToken = async (req, res) => {
       }).save();
     }
 
-    const link = `${process.env.BaseUrl}/reset-password/${user._id}/${token.token}`;
-    const result = await sendEmail(
+    const link = `${process.env.BASE_URL}api/reset-password/${user._id}/${token.token}`;
+    const result = await sendResetPasswordEmail(
       user.name,
       user.email,
       "Password reset",

@@ -48,6 +48,15 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    confirmationCode: {
+      type: String,
+      unique: true,
+    },
+    status: {
+      type: String,
+      enum: ["Pending", "Active"],
+      default: "Pending",
+    },
   },
   { timestamps: true }
 );
