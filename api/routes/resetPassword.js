@@ -1,5 +1,5 @@
 const {
-  sendToken,
+  sendOTP,
   resetPassword,
 } = require("../controllers/resetPasswordController");
 const {
@@ -9,7 +9,7 @@ const {
 
 const router = require("express").Router();
 
-router.post("/", validateEmailData, sendToken);
-router.post("/:userId/:token", validateResetPasswordData, resetPassword);
+router.post("/sendotp", validateEmailData, sendOTP);
+router.post("/", validateResetPasswordData, resetPassword);
 
 module.exports = router;

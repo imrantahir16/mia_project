@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const moment = require("moment/moment");
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -36,12 +37,17 @@ const loginUser = async (req, res) => {
 
 const verifyUserAccount = async (req, res) => {
   const user = await User.findOne({
-    confirmationCode: req.params.confirmationCode,
+    otp: req.body.otp,
   });
 
   if (!user) return res.status(404).send({ message: "User Not found." });
 
+  if (moment() > moment(user.otpExpiry))
+    return res.status(400).json({ message: "OTP is invalid or expired" });
+
   user.status = "Active";
+  user.otp = null;
+  user.otpExpiry = null;
   const result = await user.save();
   res.status(200).json({ message: "Account verified" });
 };

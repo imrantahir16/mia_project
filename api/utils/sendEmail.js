@@ -1,14 +1,15 @@
 const nodemailer = require("nodemailer");
 // require("dotenv").config();
 
-const sendConfirmationEmail = async (name, email, subject, link) => {
+const sendConfirmationEmail = async (name, email, subject, code) => {
   const output = `
     <h1>Email Confirmation</h1>
     <h2>Hello ${name},</h2>
     <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
     <p>If you did not make this request please ignore it.</p>
-    <a style="max-width: 800px" href=${link}>Click here</a>
-  `;
+    <p>This OTP will expire in 30 minutes.</p>
+    <p style="color: #4374e0; font-size: 1.5rem">${code}</p>
+    `;
 
   try {
     const transporter = nodemailer.createTransport({
@@ -35,13 +36,14 @@ const sendConfirmationEmail = async (name, email, subject, link) => {
   }
 };
 
-const sendResetPasswordEmail = async (name, email, subject, link) => {
+const sendResetPasswordEmail = async (name, email, subject, code) => {
   const output = `
     <h1>Reset Password</h1>
     <h2>Hello ${name},</h2>
     <p>A request to reset the password for your account has been made</p>
     <p>If you did not make this request please ignore it.</p>
-    <p>To reset your password use this link: <a style="max-width: 800px" href=${link}>Reset Password</a></p>
+    <p>This OTP will expire in 30 minutes.</p>
+    <p style="color: #4374e0; font-size: 1.5rem">${code}</p>
   `;
   try {
     const transporter = nodemailer.createTransport({

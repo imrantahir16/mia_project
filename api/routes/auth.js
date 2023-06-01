@@ -13,7 +13,7 @@ const {
 
 router.post("/register", validateRegisterData, registerUser);
 router.post("/login", validateLoginData, loginUser);
-router.get("/confirm/:confirmationCode", verifyUserAccount);
+router.get("/verify", verifyUserAccount);
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })

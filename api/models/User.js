@@ -48,9 +48,13 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
-    confirmationCode: {
-      type: String,
+    otp: {
+      type: Number,
       unique: true,
+    },
+    otpExpiry: {
+      type: Date,
+      default: null,
     },
     status: {
       type: String,
