@@ -6,8 +6,8 @@ import { FiEdit } from "react-icons/fi";
 import { HiOutlineTrash } from "react-icons/hi";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import EditModal from "../components/common/EditModal";
-import DeleteModal from "../components/common/DeleteModal";
+import EditMechanicModal from "../components/mechanics/EditMechanicModal";
+import DeleteMechanicModal from "../components/mechanics/DeleteMechanicModal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -15,8 +15,9 @@ import Form from "react-bootstrap/Form";
 import Spinner from "../components/common/Spinner";
 import {
   createMechanic,
-  deleteMechanic,
   getMechanics,
+  setEditingId,
+  setDeletingId,
   reset,
 } from "../features/mechanics/mechanicSlice";
 
@@ -36,10 +37,16 @@ const Mechanics = () => {
   const navigate = useNavigate();
 
   const editModalCloseHandler = () => setIsEditModalOpen(false);
-  const editModalShowHandler = () => setIsEditModalOpen(true);
+  const editModalShowHandler = (id) => {
+    dispatch(setEditingId(id));
+    setIsEditModalOpen(true);
+  };
 
   const deleteModalCloseHandler = () => setIsDeleteModalOpen(false);
-  const deleteModalShowHandler = () => setIsDeleteModalOpen(true);
+  const deleteModalShowHandler = (id) => {
+    dispatch(setDeletingId(id));
+    setIsDeleteModalOpen(true);
+  };
 
   useEffect(() => {
     if (isError) {
@@ -139,26 +146,31 @@ const Mechanics = () => {
                         <div className="d-flex align-items-center gap-2 justify-content-center">
                           <Button
                             className="btn btn-sm btn-primary d-flex align-items-center justify-content-center p-2"
-                            onClick={editModalShowHandler}
+                            disabled={item.userId !== user?.userId}
+                            onClick={() => editModalShowHandler(item._id)}
                           >
                             <FiEdit />
                           </Button>
-                          <EditModal
-                            contactId={item._id}
-                            onShow={isEditModalOpen}
-                            onClose={editModalCloseHandler}
-                          />
+                          {isEditModalOpen && (
+                            <EditMechanicModal
+                              onShow={isEditModalOpen}
+                              onClose={editModalCloseHandler}
+                            />
+                          )}
+
                           <Button
                             className="btn btn-sm btn-danger d-flex align-items-center justify-content-center p-2"
-                            onClick={deleteModalShowHandler}
+                            disabled={item.userId !== user?.userId}
+                            onClick={() => deleteModalShowHandler(item._id)}
                           >
                             <HiOutlineTrash />
                           </Button>
-                          <DeleteModal
-                            onDelete={() => dispatch(deleteMechanic(item._id))}
-                            onShow={isDeleteModalOpen}
-                            onClose={deleteModalCloseHandler}
-                          />
+                          {isDeleteModalOpen && (
+                            <DeleteMechanicModal
+                              onShow={isDeleteModalOpen}
+                              onClose={deleteModalCloseHandler}
+                            />
+                          )}
                         </div>
                       </td>
                     </tr>

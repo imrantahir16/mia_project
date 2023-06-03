@@ -1,14 +1,13 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTow } from "../../features/tows/towSlice";
-import { useEffect } from "react";
+import { deleteMechanic } from "../../features/mechanics/mechanicSlice";
 const DeleteTowModal = ({ onShow, onClose }) => {
-  const { deletingId } = useSelector((state) => state.tow);
+  const { deletingId } = useSelector((state) => state.mechanic);
   const dispatch = useDispatch();
   const deleteHandler = () => {
-    dispatch(deleteTow(deletingId));
-    console.log(deletingId);
+    dispatch(deleteMechanic(deletingId));
+    // console.log(deletingId);
     onClose();
     window.location.reload(true);
   };

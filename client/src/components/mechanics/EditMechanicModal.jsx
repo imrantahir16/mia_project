@@ -8,25 +8,31 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "../../api/axios";
 
-const EditTowModal = ({ onShow, onClose }) => {
+const EditMechanicModal = ({ onShow, onClose }) => {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
-  const { editingId, tows } = useSelector((state) => state.tow);
+  const { editingId, mechanics } = useSelector((state) => state.mechanic);
   const { user } = useSelector((state) => state.auth);
 
   const editHandler = async () => {
-    const towData = { name, contact };
+    const mechanicData = { name, contact };
     const config = {
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     };
-    const response = await axios.put(`api/tows/${editingId}`, towData, config);
+    const response = await axios.put(
+      `api/mechanic/${editingId}`,
+      mechanicData,
+      config
+    );
     onClose();
     window.location.reload(true);
   };
   useEffect(() => {
-    const { name, contact } = tows.filter((tow) => tow._id === editingId)[0];
+    const { name, contact } = mechanics.filter(
+      (mechanic) => mechanic._id === editingId
+    )[0];
     setName(name);
     setContact(contact);
   }, []);
@@ -77,4 +83,4 @@ const EditTowModal = ({ onShow, onClose }) => {
     </Modal>
   );
 };
-export default EditTowModal;
+export default EditMechanicModal;

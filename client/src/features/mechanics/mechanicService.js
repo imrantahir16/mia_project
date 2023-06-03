@@ -40,10 +40,23 @@ const deleteMechanic = async (mechanicId, token) => {
   return response.data;
 };
 
+const updateMechanic = async (mechanicId, mechanicData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(API_URL + mechanicId, mechanicData, config);
+  console.log(response);
+  return response.data;
+};
+
 const mechanicService = {
   createMechanic,
   getMechanics,
   deleteMechanic,
+  updateMechanic,
 };
 
 export default mechanicService;

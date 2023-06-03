@@ -7,6 +7,9 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  error: null,
+  editingId: null,
+  deletingId: null,
 };
 
 // create
@@ -71,6 +74,13 @@ const mechanicSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => initialState,
+    setEditingId: (state, action) => {
+      state.editingId = action.payload;
+    },
+
+    setDeletingId: (state, action) => {
+      state.deletingId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -118,5 +128,5 @@ const mechanicSlice = createSlice({
   },
 });
 
-export const { reset } = mechanicSlice.actions;
+export const { reset, setEditingId, setDeletingId } = mechanicSlice.actions;
 export default mechanicSlice.reducer;
