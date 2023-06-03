@@ -42,11 +42,11 @@ const Users = () => {
 
   return (
     <div className="container">
-      <div className="d-flex flex-column gap-4 p-3">
+      <div className="d-flex flex-column gap-4 px-2 py-3 px-md-3">
         <div className="pt-3">
           <h2>Users</h2>
         </div>
-        <div className="p-3">
+        <div className="px-0 py-3 px-md-3">
           <Table
             responsive
             className="table table-hover table-bordered overflow-x-scroll"

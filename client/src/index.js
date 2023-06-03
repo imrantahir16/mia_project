@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import Layout from "./components/Layout";
 
 if (process.env.NODE_ENV === "production") {
   disableReactDevTools();
@@ -18,7 +19,9 @@ root.render(
     <Router>
       <Provider store={store}>
         <Routes>
-          <Route path="/*" element={<App />} />
+          <Route element={<Layout />}>
+            <Route path="/*" element={<App />} />
+          </Route>
         </Routes>
       </Provider>
     </Router>

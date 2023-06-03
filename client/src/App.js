@@ -10,32 +10,34 @@ import Emergencies from "./pages/Emergencies";
 import Users from "./pages/Users";
 import Reports from "./pages/Reports";
 import Subscription from "./pages/Subscription";
-import Monthly from "./pages/Monthly";
-import Yearly from "./pages/Yearly";
 import Completion from "./pages/Completion";
 import ForgotPassword from "./pages/ForgotPassword";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import Plans from "./pages/Plans";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        {/* Public routes */}
+      {/* Public routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgotPassword" element={<ForgotPassword />} />
+
+      {/* protected Routes */}
+      <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Home />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
+        <Route path="emergencies" element={<Emergencies />} />
         <Route path="tows" element={<Tows />} />
         <Route path="mechanics" element={<Mechanics />} />
-        <Route path="emergencies" element={<Emergencies />} />
         <Route path="users" element={<Users />} />
         <Route path="reports" element={<Reports />} />
-        <Route path="subscription" element={<Subscription />} />
-        <Route path="yearly" element={<Yearly />} />
-        <Route path="monthly" element={<Monthly />} />
-        <Route path="subscription/completion" element={<Completion />} />
-        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/plans" element={<Plans />} />
+        <Route path="/subscription" element={<Subscription />} />
+        <Route path="/subscription/completion" element={<Completion />} />
+      </Route>
 
-        {/* Protected routes */}
-        {/* <Route element={<PersistLogin />}>
+      {/* Protected routes */}
+      {/* <Route element={<PersistLogin />}>
           <Route element={<RequiredAuth allowedRoles={[ROLES.User]} />}>
             <Route path="/" element={<Home />} />
           </Route>
@@ -53,9 +55,9 @@ function App() {
             <Route path="lounge" element={<Lounge />} />
           </Route>
         </Route> */}
-        {/* catch any other routes */}
-        <Route path="*" element={<Missing />} />
-      </Route>
+      {/* catch any other routes */}
+      <Route path="*" element={<Missing />} />
+      {/* </Route> */}
     </Routes>
   );
 }

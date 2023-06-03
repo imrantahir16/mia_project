@@ -1,10 +1,10 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-// const isEmailValid = require("../utils/emailValidator");
 const jwt = require("jsonwebtoken");
 const { sendConfirmationEmail } = require("../utils/sendEmail");
 const otpGenerator = require("../utils/otpGenerator");
 const moment = require("moment/moment");
+const stripe = require("../utils/stripe");
 
 const registerUser = async (req, res) => {
   const { name, email, phone, password, confirmPassword } = req.body;
@@ -18,6 +18,12 @@ const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    const customer = await stripe.customers.create(
+      {
+        email,
+      },
+      { apiKey: process.env.STRIPE_SECRET_KEY }
+    );
     const code = otpGenerator();
     const expiry = moment().add(30, "minutes");
     // console.log(code);
@@ -26,6 +32,7 @@ const registerUser = async (req, res) => {
       email,
       phone,
       password: hashedPassword,
+      stripeCustomerId: customer.id,
       otp: code,
       otpExpiry: expiry,
     });

@@ -61,6 +61,10 @@ const userSchema = new Schema(
       enum: ["Pending", "Active"],
       default: "Pending",
     },
+    stripeCustomerId: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

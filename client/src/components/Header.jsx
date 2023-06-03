@@ -56,8 +56,8 @@ const Header = () => {
                   <NavDropdown.Item href="mechanics">Mechanic</NavDropdown.Item>
                   <NavDropdown.Item href="/tows">Tow</NavDropdown.Item>
                 </NavDropdown>
-                <a className="nav-link" href="/subscription">
-                  Subscription
+                <a className="nav-link" href="/plans">
+                  Plans
                 </a>
                 <button
                   className="btn btn-primary ms-0 ms-md-4"
