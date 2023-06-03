@@ -39,7 +39,6 @@ app.use(express.static("public"));
 // built-in middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// just checking
 
 // session middleware
 app.use(
