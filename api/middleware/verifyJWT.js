@@ -8,7 +8,7 @@ const verifyJWT = (req, res, next) => {
     if (err)
       return res
         .status(403)
-        .json({ error: err.message, message: "ERROR COMING FROM HERE" }); // which forbidden or invalid token
+        .json({ error: err.message, message: "Access Token not verified" }); // which forbidden or invalid token
     req.userId = decoded.UserInfo.userId;
     // console.log(req.userId);
     req.roles = decoded.UserInfo.roles;

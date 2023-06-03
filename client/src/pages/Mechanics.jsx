@@ -46,7 +46,12 @@ const Mechanics = () => {
       console.log(message);
     }
 
-    dispatch(getMechanics());
+    if (!user) {
+      navigate("/login");
+    }
+    if (user) {
+      dispatch(getMechanics());
+    }
 
     return () => {
       dispatch(reset());

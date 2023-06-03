@@ -3,6 +3,8 @@ const fs = require("fs");
 
 const generateReport = async (req, res) => {
   // console.log(req.userId);
+  // make this all field optional except lat lng
+  // if (!req.userId) return res.status(401).json({ message: "Unauthorized" });
   const newReport = {
     userId: req.userId,
     location: {
@@ -10,10 +12,10 @@ const generateReport = async (req, res) => {
       lat: req.body["location.lat"],
       lng: req.body["location.lng"],
     },
-    weather: req.body.weather,
-    time: req.body.time,
-    speed: req.body.speed,
-    traffic: req.body.traffic,
+    weather: req.body?.weather,
+    time: req.body?.time,
+    speed: req.body?.speed,
+    traffic: req.body?.traffic,
     reportImages: req.files?.reportImages?.map((imageFile) => imageFile.path),
   };
 

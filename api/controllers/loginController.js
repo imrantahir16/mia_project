@@ -29,7 +29,7 @@ const loginUser = async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "30d" }
     );
-    res.status(200).json({ email, accessToken });
+    res.status(200).json({ email, accessToken, userId: foundUser._id });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

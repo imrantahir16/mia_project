@@ -7,7 +7,7 @@ import { HiOutlineTrash } from "react-icons/hi";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import EditModal from "../components/common/EditModal";
-import DeleteModal from "../components/common/DeleteModal";
+// import DeleteModal from "../components/common/DeleteModal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -17,8 +17,11 @@ import {
   getTows,
   reset,
   createTow,
-  deleteTow,
+  setEditingId,
+  setDeletingId,
 } from "../features/tows/towSlice";
+import DeleteTowModal from "../components/tows/DeleteTowModal";
+import EditTowModal from "../components/tows/EditTowModal";
 
 const Tows = () => {
   const [towName, setTowName] = useState("");
@@ -26,34 +29,39 @@ const Tows = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedContactId, setSelectedContectId] = useState(null);
-  const { tows, isError, isLoading, message } = useSelector(
-    (state) => state.tow
-  );
+  const { tows, isError, isLoading, message, editingId, deletingId } =
+    useSelector((state) => state.tow);
+
+  // const
+
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const editModalCloseHandler = () => setIsEditModalOpen(false);
-  const editModalShowHandler = () => setIsEditModalOpen(true);
+  const editModalShowHandler = (id) => {
+    dispatch(setEditingId(id));
+    setIsEditModalOpen(true);
+  };
 
   const deleteModalCloseHandler = () => setIsDeleteModalOpen(false);
   const deleteModalShowHandler = (id) => {
-    setSelectedContectId(id);
+    dispatch(setDeletingId(id));
+    console.log(id);
     setIsDeleteModalOpen(true);
-  };
-
-  const deleteHandler = () => {
-    console.log(selectedContactId);
-    dispatch(deleteTow(selectedContactId));
   };
 
   useEffect(() => {
     if (isError) {
       console.log(message);
     }
+    if (!user) {
+      navigate("/login");
+    }
 
-    dispatch(getTows());
+    if (user) {
+      dispatch(getTows());
+    }
 
     return () => {
       dispatch(reset());
@@ -69,6 +77,7 @@ const Tows = () => {
     setTowContact("");
   };
 
+  // toast will go here
   if (isError) {
     console.log(message);
   }
@@ -140,27 +149,31 @@ const Tows = () => {
                         <div className="d-flex align-items-center gap-2 justify-content-center">
                           <Button
                             className="btn btn-sm btn-primary d-flex align-items-center justify-content-center p-2"
-                            onClick={editModalShowHandler}
+                            disabled={item.userId !== user?.userId}
+                            onClick={() => editModalShowHandler(item._id)}
                           >
                             <FiEdit />
                           </Button>
-                          <EditModal
-                            contactId={item._id}
-                            onShow={isEditModalOpen}
-                            onClose={editModalCloseHandler}
-                          />
+                          {isEditModalOpen && (
+                            <EditTowModal
+                              onShow={isEditModalOpen}
+                              onClose={editModalCloseHandler}
+                            />
+                          )}
                           <Button
                             className="btn btn-sm btn-danger d-flex align-items-center justify-content-center p-2"
-                            onClick={deleteModalShowHandler}
+                            disabled={item.userId !== user?.userId}
+                            onClick={() => deleteModalShowHandler(item._id)}
                           >
                             <HiOutlineTrash />
                           </Button>
 
-                          <DeleteModal
-                            // onDelete={deleteHandler}
-                            onShow={isDeleteModalOpen}
-                            onClose={deleteModalCloseHandler}
-                          />
+                          {isDeleteModalOpen && (
+                            <DeleteTowModal
+                              onShow={isDeleteModalOpen}
+                              onClose={deleteModalCloseHandler}
+                            />
+                          )}
                         </div>
                       </td>
                     </tr>

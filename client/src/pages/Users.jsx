@@ -6,24 +6,31 @@ import { useSelector, useDispatch } from "react-redux";
 import DeleteModal from "../components/common/DeleteModal";
 import { getAllUsers, reset } from "../features/users/userSlice";
 import Spinner from "../components/common/Spinner";
+import { useNavigate } from "react-router-dom";
 const Users = () => {
   const { users, isError, isLoading, message } = useSelector(
     (state) => state.user
   );
   const { user } = useSelector((state) => state.auth);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     if (isError) {
       console.log(message);
     }
 
-    dispatch(getAllUsers());
+    if (!user) {
+      navigate("/login");
+    }
+
+    if (user) {
+      dispatch(getAllUsers());
+    }
 
     return () => {
       dispatch(reset());
     };
-  }, [user, dispatch, message, isError]);
+  }, [user, dispatch, message, isError, navigate]);
 
   if (isError) {
     console.log(message);

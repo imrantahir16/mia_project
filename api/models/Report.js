@@ -29,15 +29,12 @@ const reportSchema = new Schema(
     },
     weather: {
       type: String,
-      required: true,
     },
     speed: {
       type: Number,
-      required: true,
     },
     traffic: {
       type: String,
-      required: true,
     },
     reportImages: {
       type: [String],

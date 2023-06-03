@@ -20,7 +20,9 @@ router.get(
 );
 router.get(
   "/google/callback",
-  passport.authenticate("google", { session: false }),
+  passport.authenticate("google", {
+    failureRedirect: process.env.CLIENT_BASE_URL,
+  }),
   (req, res) => {
     // console.log(req.user);
     const roles = Object.values(req.user.roles).filter(Boolean);

@@ -111,6 +111,7 @@ const validateContactData = [
 
 const validateReportData = [
   body("location.description")
+    .optional()
     .notEmpty()
     .withMessage("Location description is required"),
 
@@ -126,17 +127,24 @@ const validateReportData = [
     .isDecimal()
     .withMessage("Invalid value for longitude"),
 
-  // body("time").isDate().withMessage("Invalid value for time"),
+  body("time").optional().isDate().withMessage("Invalid value for time"),
 
-  body("weather").notEmpty().withMessage("Weather information is required"),
+  body("weather")
+    .optional()
+    .notEmpty()
+    .withMessage("Weather information is required"),
 
   body("speed")
+    .optional()
     .notEmpty()
     .withMessage("Car speed is required")
     .isDecimal()
     .withMessage("Invalid value for speed"),
 
-  body("traffic").notEmpty().withMessage("Traffic information is required"),
+  body("traffic")
+    .optional()
+    .notEmpty()
+    .withMessage("Traffic information is required"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -164,7 +172,7 @@ const validateUpdateReportData = [
     .withMessage("Location longitude is required")
     .isDecimal()
     .withMessage("Invalid value for longitude"),
-  // body("time").isDate().withMessage("Invalid value for time"),
+  body("time").optional().isDate().withMessage("Invalid value for time"),
   body("weather")
     .optional()
     .notEmpty()

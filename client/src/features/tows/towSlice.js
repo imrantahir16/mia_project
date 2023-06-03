@@ -7,6 +7,9 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  error: null,
+  editingId: null,
+  deletingId: null,
 };
 
 // create tows
@@ -16,6 +19,24 @@ export const createTow = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.accessToken;
       return await towService.createTow(towData, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateTow = createAsyncThunk(
+  "tows/update",
+  async (towId, towData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.accessToken;
+      return await towService.updateTow(towId, towData, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -66,6 +87,14 @@ const towSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => initialState,
+
+    setEditingId: (state, action) => {
+      state.editingId = action.payload;
+    },
+
+    setDeletingId: (state, action) => {
+      state.deletingId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -111,5 +140,6 @@ const towSlice = createSlice({
   },
 });
 
-export const { reset } = towSlice.actions;
+export const { reset, setEditingId, setDeletingId, getSingleTow } =
+  towSlice.actions;
 export default towSlice.reducer;

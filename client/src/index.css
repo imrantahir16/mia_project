@@ -44,6 +44,15 @@ a {
   animation: spin 1.2s linear infinite;
 }
 
+.showPassword {
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 0.9rem;
+  /* padding: 0.5rem; */
+  max-height: 100%;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
-const path = require("path");
 
 // internal imports
 const connectDB = require("./config/db");
@@ -53,6 +52,7 @@ app.use(
 // passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
 // routers
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/reset-password", require("./routes/resetPassword"));

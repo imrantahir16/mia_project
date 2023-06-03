@@ -13,6 +13,7 @@ import Subscription from "./pages/Subscription";
 import Monthly from "./pages/Monthly";
 import Yearly from "./pages/Yearly";
 import Completion from "./pages/Completion";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="yearly" element={<Yearly />} />
         <Route path="monthly" element={<Monthly />} />
         <Route path="subscription/completion" element={<Completion />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
 
         {/* Protected routes */}
         {/* <Route element={<PersistLogin />}>

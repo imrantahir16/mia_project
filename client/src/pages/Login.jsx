@@ -6,16 +6,18 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import axios from "../api/axios";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { login, reset } from "../features/auth/authSlice";
-import Spinner from "../components/common/Spinner";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import axios, { axiosPrivate } from "../api/axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, isLoading, isSuccess, isError, message } = useSelector(
@@ -48,6 +50,11 @@ const Login = () => {
     const userData = { email, password };
     dispatch(login(userData));
   };
+
+  const googleLoginHandler = async (e) => {
+    const res = await axios.get("api/auth/google");
+    console.log(res);
+  };
   return (
     <section>
       <Container
@@ -56,15 +63,15 @@ const Login = () => {
       >
         <Card className="p-3 mw-100">
           <Form className="mw-100" onSubmit={loginHandler}>
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalEmail"
-            >
-              <Form.Label column sm={12}>
-                Email
-              </Form.Label>
-              <Col sm={12}>
+            <div className="d-flex align-item-center justify-content-center py-3">
+              <h1 className="text-primary">Login</h1>
+            </div>
+            <Col sm={12}>
+              <FloatingLabel
+                controlId="floatingInputEmail"
+                label="Email Address"
+                className="mb-1"
+              >
                 <Form.Control
                   name="email"
                   value={email}
@@ -72,35 +79,34 @@ const Login = () => {
                   type="email"
                   placeholder="Email"
                 />
-              </Col>
-            </Form.Group>
-
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalPassword"
-            >
-              <Form.Label column sm={12}>
-                Password
-              </Form.Label>
-              <Col sm={12}>
+              </FloatingLabel>
+            </Col>
+            <Col sm={12}>
+              <FloatingLabel
+                controlId="floatingInputPassword"
+                label="Password"
+                className="mb-1"
+              >
+                <span
+                  className="showPassword"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+                </span>
                 <Form.Control
+                  type={showPassword ? "text" : "password"}
+                  placeholder="password"
                   name="password"
                   value={password}
                   onChange={(e) => onChangeHandler(e)}
-                  type="password"
-                  placeholder="Password"
                 />
-              </Col>
-            </Form.Group>
+              </FloatingLabel>
+            </Col>
             <Form.Group
               as={Row}
               className="mb-3"
               controlId="formHorizontalCheck"
             >
-              <Col>
-                <Form.Check label="Remember me" />
-              </Col>
               <Col className="d-flex justify-content-end">
                 <a href="/forgotPassword">Forgot Password?</a>
               </Col>
@@ -121,7 +127,10 @@ const Login = () => {
                     Not a member? <a href="/register">Register</a>
                   </p>
                   <p>or sign in with:</p>
-                  <Button className="btn btn-secondary">
+                  <Button
+                    className="btn btn-secondary"
+                    onClick={googleLoginHandler}
+                  >
                     <FcGoogle className="me-2" />
                     <span>Login with Google</span>
                   </Button>

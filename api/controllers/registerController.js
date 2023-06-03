@@ -20,7 +20,7 @@ const registerUser = async (req, res) => {
 
     const code = otpGenerator();
     const expiry = moment().add(30, "minutes");
-    console.log(code);
+    // console.log(code);
     const newUser = await User.create({
       name,
       email,

@@ -51,7 +51,12 @@ const Emergencies = () => {
       console.log(message);
     }
 
-    dispatch(getEmergencies());
+    if (!user) {
+      navigate("/login");
+    }
+    if (user) {
+      dispatch(getEmergencies());
+    }
 
     return () => {
       dispatch(reset());

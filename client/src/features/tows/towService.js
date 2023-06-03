@@ -40,10 +40,24 @@ const deleteTow = async (towId, token) => {
   return response.data;
 };
 
+const updateTow = async (towId, towData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(API_URL + towId, towData, config);
+  console.log(response);
+  return response.data;
+};
+
 const towService = {
   createTow,
   getTows,
+  // getSingleTow,
   deleteTow,
+  updateTow,
 };
 
 export default towService;
