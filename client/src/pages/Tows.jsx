@@ -6,8 +6,6 @@ import { FiEdit } from "react-icons/fi";
 import { HiOutlineTrash } from "react-icons/hi";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import EditModal from "../components/common/EditModal";
-// import DeleteModal from "../components/common/DeleteModal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";

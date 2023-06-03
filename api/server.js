@@ -21,13 +21,11 @@ const { uploadHandler } = require("./middleware/uploadMiddleware");
 require("dotenv").config();
 require("colors");
 require("./config/passport")(passport);
+
 // initializing app
 const app = express();
 connectDB();
 const PORT = process.env.PORT || 5000;
-
-// stripe init
-const stripe = require("stripe")(`${process.env.STRIPE_SECRET_KEY}`);
 
 // cors
 app.use(origin);
@@ -57,14 +55,6 @@ app.use(passport.session());
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/reset-password", require("./routes/resetPassword"));
 
-// subscription api
-
-app.get("/api/config", (req, res) => {
-  res.send({
-    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-  });
-});
-
 app.use(verifyJWT);
 app.use("/api/emergency", require("./routes/emergency"));
 app.use("/api/mechanic", require("./routes/mechanic"));
@@ -88,5 +78,3 @@ mongoose.connection.once("open", () => {
     console.log(`Server is running on port ${PORT}`.cyan.underline);
   });
 });
-
-// module.exports = upload;

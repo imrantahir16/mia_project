@@ -10,12 +10,13 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import DeleteModal from "../components/common/DeleteModal";
-import EditModal from "../components/common/EditModal";
+import DeleteEmergencyModal from "../components/emergencies/DeleteEmergencyModal";
+import EditEmergencyModal from "../components/emergencies/EditEmergencyModal";
 import {
   getEmergencies,
   createEmergency,
-  deleteEmergency,
+  setEditingId,
+  setDeletingId,
   reset,
 } from "../features/emergencies/emergencySlice";
 import Spinner from "../components/common/Spinner";
@@ -24,13 +25,9 @@ const Emergencies = () => {
   const [emergencyName, setEmergencyName] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [invalidName, setInvalidName] = useState(true);
-  // const [invalidContact, setInvalidContact] = useState(true);
-  // const [currentContact, setCurrentContact] = useState({});
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedContactId, setSelectedContectId] = useState(null);
 
   const { emergencies, isError, isLoading, message } = useSelector(
     (state) => state.emergency
@@ -41,10 +38,16 @@ const Emergencies = () => {
   const navigate = useNavigate();
 
   const editModalCloseHandler = () => setIsEditModalOpen(false);
-  const editModalShowHandler = () => setIsEditModalOpen(true);
+  const editModalShowHandler = (id) => {
+    dispatch(setEditingId(id));
+    setIsEditModalOpen(true);
+  };
 
   const deleteModalCloseHandler = () => setIsDeleteModalOpen(false);
-  const deleteModalShowHandler = () => setIsDeleteModalOpen(true);
+  const deleteModalShowHandler = (id) => {
+    dispatch(setDeletingId(id));
+    setIsDeleteModalOpen(true);
+  };
 
   useEffect(() => {
     if (isError) {
@@ -148,25 +151,30 @@ const Emergencies = () => {
                         <div className="d-flex align-items-center gap-2 justify-content-center">
                           <Button
                             className="btn btn-sm btn-primary d-flex align-items-center justify-content-center p-2"
-                            onClick={editModalShowHandler}
+                            disabled={item.userId !== user?.userId}
+                            onClick={() => editModalShowHandler(item._id)}
                           >
                             <FiEdit />
                           </Button>
-                          <EditModal
-                            contactId={item._id}
-                            onShow={isEditModalOpen}
-                            onClose={editModalCloseHandler}
-                          />
+                          {isEditModalOpen && (
+                            <EditEmergencyModal
+                              onShow={isEditModalOpen}
+                              onClose={editModalCloseHandler}
+                            />
+                          )}
                           <Button
                             className="btn btn-sm btn-danger d-flex align-items-center justify-content-center p-2"
-                            onClick={deleteModalShowHandler}
+                            disabled={item.userId !== user?.userId}
+                            onClick={() => deleteModalShowHandler(item._id)}
                           >
                             <HiOutlineTrash />
                           </Button>
-                          <DeleteModal
-                            onShow={isDeleteModalOpen}
-                            onClose={deleteModalCloseHandler}
-                          />
+                          {isDeleteModalOpen && (
+                            <DeleteEmergencyModal
+                              onShow={isDeleteModalOpen}
+                              onClose={deleteModalCloseHandler}
+                            />
+                          )}
                         </div>
                       </td>
                     </tr>

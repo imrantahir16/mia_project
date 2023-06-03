@@ -40,10 +40,27 @@ const deleteEmergency = async (emergencyId, token) => {
   return response.data;
 };
 
+const updateEmergency = async (emergencyId, emergencyData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(
+    API_URL + emergencyId,
+    emergencyData,
+    config
+  );
+  console.log(response);
+  return response.data;
+};
+
 const emergencyService = {
   createEmergency,
   getEmergencies,
   deleteEmergency,
+  updateEmergency,
 };
 
 export default emergencyService;

@@ -140,6 +140,5 @@ const towSlice = createSlice({
   },
 });
 
-export const { reset, setEditingId, setDeletingId, getSingleTow } =
-  towSlice.actions;
+export const { reset, setEditingId, setDeletingId } = towSlice.actions;
 export default towSlice.reducer;
