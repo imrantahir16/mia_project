@@ -27,7 +27,7 @@ const Plans = () => {
 
   const fetchPlan = async () => {
     const { data: res } = await axios.get("api/plans", config);
-    setPlan(res.plan);
+    setPlan(res);
     console.log(res);
     setIsLoading(false);
   };
@@ -39,7 +39,7 @@ const Plans = () => {
     <section className="text-center">
       <Container>
         {isLoading && <Spinner />}
-        {plan && (
+        {plan.planId && (
           <>
             <h2 className="mt-5">You have subscribed to our {plan.planName}</h2>
             <button
@@ -50,7 +50,7 @@ const Plans = () => {
             </button>
           </>
         )}
-        {!plan && !isLoading && (
+        {!plan.planId && !isLoading && (
           <>
             <h2 className="mt-5">You have not subscribed to any plan yet</h2>
             <a className="btn btn-primary mt-4" href="/subscription">
