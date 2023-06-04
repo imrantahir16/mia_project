@@ -15,7 +15,7 @@ const Plans = () => {
   };
 
   const fetchPlan = async () => {
-    const { data: res } = await axios.get("/api/plans", config);
+    const { data: res } = await axios.get("api/plans", config);
     setPlan(res.plan);
     console.log(res.plan);
     setIsLoading(false);
