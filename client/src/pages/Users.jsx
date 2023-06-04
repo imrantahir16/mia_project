@@ -3,10 +3,10 @@ import { FiEdit } from "react-icons/fi";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import DeleteModal from "../components/common/DeleteModal";
 import { getAllUsers, reset } from "../features/users/userSlice";
 import Spinner from "../components/common/Spinner";
 import { useNavigate } from "react-router-dom";
+import noProfileImage from "../assets/noprofile.webp";
 const Users = () => {
   const { users, isError, isLoading, message } = useSelector(
     (state) => state.user
@@ -53,6 +53,7 @@ const Users = () => {
           >
             <thead>
               <tr>
+                <th scope="col">Profile</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Phone</th>
@@ -63,7 +64,19 @@ const Users = () => {
               {users.map((user) => {
                 return (
                   <tr key={user._id}>
-                    <td>{user.name}</td>
+                    <td className="d-flex align-items-center justify-content-center">
+                      <div className="userProfileImage">
+                        {user.profileImage !== "" ? (
+                          <img
+                            src={`${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`}
+                            alt={user.name}
+                          />
+                        ) : (
+                          <img src={noProfileImage} alt={user.name} />
+                        )}
+                      </div>
+                    </td>
+                    <td className="nowrap">{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.phone}</td>
                     <td>

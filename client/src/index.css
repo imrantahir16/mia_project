@@ -20,6 +20,22 @@ form > * {
   margin: 10px 0;
 }
 
+.userProfileImage {
+  max-width: 35px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+}
+img {
+  display: block;
+  width: 100%;
+  object-fit: contain;
+}
+
+td {
+  white-space: nowrap;
+}
+
 a {
   color: inherit;
   text-decoration: none;
