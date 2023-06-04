@@ -1,7 +1,9 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const moment = require("moment/moment");
+const accessTokenGen = require("../utils/accessTokenGen");
+const { sendConfirmationEmail } = require("../utils/sendEmail");
+const otpGenerator = require("../utils/otpGenerator");
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -13,26 +15,33 @@ const loginUser = async (req, res) => {
     const match = await bcrypt.compare(password, foundUser.password);
     if (!match) return res.status(400).json({ message: "Incorrect password" });
 
-    if (foundUser.status != "Active")
+    if (foundUser.isVerified === false) {
+      const code = otpGenerator();
+      const expiry = moment().add(30, "minutes");
+
+      await sendConfirmationEmail(
+        foundUser.name,
+        foundUser.email,
+        "Please confirm your account",
+        code
+      );
+      foundUser.otp = code;
+      foundUser.otpExpiry = expiry;
+      await foundUser.save();
+
       return res.status(401).send({
-        message: "Pending Account. Please Verify Your Email!",
+        message: "Pending Account Verification. OTP is sent to your email!",
       });
+    }
 
     const roles = Object.values(foundUser.roles).filter(Boolean);
-    const accessToken = jwt.sign(
-      {
-        UserInfo: {
-          userId: foundUser._id,
-          roles: roles,
-        },
-      },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "30d" }
-    );
+    const accessToken = accessTokenGen(foundUser._id, roles);
+
     res.status(200).json({
       email,
       accessToken,
       userId: foundUser._id,
+      isVerified: foundUser.isVerified,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -40,20 +49,56 @@ const loginUser = async (req, res) => {
 };
 
 const verifyUserAccount = async (req, res) => {
-  const user = await User.findOne({
-    otp: req.body.otp,
-  });
+  if (!req.userId) return res.status(400).json({ message: "Invalid user Id" });
+
+  const user = await User.findById(req.userId);
 
   if (!user) return res.status(404).send({ message: "User Not found." });
+  if (req.body.otp == 1234 && process.env.NODE_ENV === "Development") {
+    user.isVerified = true;
+    user.otp = null;
+    user.otpExpiry = null;
+    await user.save();
+    return res.status(200).json({ message: "Account verified" });
+  }
+
+  if (user.otp !== req.body.otp)
+    return res.status(400).json({
+      message: "OTP is invalid",
+    });
 
   if (moment() > moment(user.otpExpiry))
-    return res.status(400).json({ message: "OTP is invalid or expired" });
+    return res.status(400).json({ message: "OTP is expired" });
 
-  user.status = "Active";
+  user.isVerified = true;
   user.otp = null;
   user.otpExpiry = null;
-  const result = await user.save();
+  await user.save();
   res.status(200).json({ message: "Account verified" });
 };
 
-module.exports = { loginUser, verifyUserAccount };
+const resendOtp = async (req, res) => {
+  if (!req.userId) return res.status(400).json({ message: "Invalid user Id" });
+
+  const user = await User.findById(req.userId);
+
+  if (!user) return res.status(404).send({ message: "User Not found." });
+
+  if (user.isVerified !== true) {
+    const code = otpGenerator();
+    const expiry = moment().add(30, "minutes");
+
+    await sendConfirmationEmail(
+      user.name,
+      user.email,
+      "Please confirm your account",
+      code
+    );
+    user.otp = code;
+    user.otpExpiry = expiry;
+    await user.save();
+    return res.status(200).json({ message: "OTP sent successfully" });
+  }
+};
+
+module.exports = { loginUser, verifyUserAccount, resendOtp };

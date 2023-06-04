@@ -4,16 +4,20 @@ const jwt = require("jsonwebtoken");
 const {
   loginUser,
   verifyUserAccount,
+  resendOtp,
 } = require("../controllers/loginController");
 const { registerUser } = require("../controllers/registerController");
 const {
   validateRegisterData,
   validateLoginData,
 } = require("../middleware/validationMiddleware");
+const verifyJWT = require("../middleware/verifyJWT");
 
 router.post("/register", validateRegisterData, registerUser);
 router.post("/login", validateLoginData, loginUser);
-router.get("/verify", verifyUserAccount);
+router.post("/verify", verifyJWT, verifyUserAccount);
+router.get("/resendotp", verifyJWT, resendOtp);
+
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })

@@ -4,7 +4,7 @@ const fs = require("fs");
 const generateReport = async (req, res) => {
   // console.log(req.userId);
   // make this all field optional except lat lng
-  // if (!req.userId) return res.status(401).json({ message: "Unauthorized" });
+  if (!req.userId) return res.status(401).json({ message: "Unauthorized" });
   const newReport = {
     userId: req.userId,
     location: {

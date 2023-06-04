@@ -56,10 +56,17 @@ const userSchema = new Schema(
       type: Date,
       default: null,
     },
-    status: {
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    isSubscribed: {
+      type: Boolean,
+      default: false,
+    },
+    subscribedPlanId: {
       type: String,
-      enum: ["Pending", "Active"],
-      default: "Pending",
+      default: "",
     },
     stripeCustomerId: {
       type: String,

@@ -32,7 +32,19 @@ const createCheckoutSession = async (req, res) => {
   return res.json(session);
 };
 
+const billingPortal = async (req, res) => {
+  const user = await User.findOne({ _id: req.userId });
+  const customerId = user.stripeCustomerId;
+
+  const portalSession = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+  });
+
+  res.json(portalSession);
+};
+
 module.exports = {
   getPriceController,
   createCheckoutSession,
+  billingPortal,
 };

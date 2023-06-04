@@ -1,7 +1,5 @@
 const User = require("../models/User");
-const Token = require("../models/Token");
 const { sendResetPasswordEmail } = require("../utils/sendEmail");
-const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const otpGenerator = require("../utils/otpGenerator");
 const moment = require("moment/moment");
@@ -14,14 +12,7 @@ const sendOTP = async (req, res) => {
         .status(404)
         .json({ message: "User with given email doesn't exist" });
 
-    // let token = await Token.findOne({ userId: user._id });
-    // if (!token) {
-    //   token = await new Token({
-    //     userId: user._id,
-    //     token: crypto.randomBytes(32).toString("hex"),
-    //   }).save();
-    // }
-    if (user.status !== "Active")
+    if (user.isVerified !== true)
       return res
         .status(400)
         .json({ message: "Pending Account. Please Verify Your Email!" });

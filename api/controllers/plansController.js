@@ -3,7 +3,7 @@ const stripe = require("../utils/stripe");
 
 const getSubscribedPlan = async (req, res) => {
   const user = await User.findById(req.userId);
-
+  let plan;
   const subscriptions = await stripe.subscriptions.list(
     {
       customer: user.stripeCustomerId,
@@ -15,11 +15,21 @@ const getSubscribedPlan = async (req, res) => {
     }
   );
 
-  if (!subscriptions.data.length) return res.json([]);
+  if (!subscriptions.data.length) {
+    plan = {
+      isSubscribed: false,
+    };
+    return res.json(plan);
+  }
 
-  const plan = subscriptions.data[0].plan.nickname;
+  plan = {
+    subscriptionId: subscriptions.data[0].id,
+    planId: subscriptions.data[0].plan.id,
+    planName: subscriptions.data[0].plan.nickname,
+    isSubscribed: subscriptions.data[0].status === "active" ? true : false,
+  };
 
-  res.status(200).json({ plan });
+  res.status(200).json(plan);
 };
 
 module.exports = { getSubscribedPlan };

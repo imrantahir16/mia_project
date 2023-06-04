@@ -1,10 +1,10 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { sendConfirmationEmail } = require("../utils/sendEmail");
 const otpGenerator = require("../utils/otpGenerator");
 const moment = require("moment/moment");
 const stripe = require("../utils/stripe");
+const accessTokenGen = require("../utils/accessTokenGen");
 
 const registerUser = async (req, res) => {
   const { name, email, phone, password, confirmPassword } = req.body;
@@ -37,13 +37,18 @@ const registerUser = async (req, res) => {
       otpExpiry: expiry,
     });
 
+    console.log(newUser._id, newUser.roles);
     await sendConfirmationEmail(
       name,
       email,
       "Please confirm your account",
       code
     );
+    const roles = Object.values(newUser.roles).filter(Boolean);
+    const accessToken = accessTokenGen(newUser._id, roles);
     res.status(201).json({
+      isVerified: newUser.isVerified,
+      accessToken,
       message:
         "User was registered successfully! Please check your email for confirmation code",
     });

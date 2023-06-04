@@ -18,7 +18,7 @@ module.exports = function (passport) {
           name: profile.displayName,
           email: profile.emails[0].value,
           profileImage: profile.photos[0].value,
-          status: "Active",
+          isVerified: true,
         };
         try {
           let user = await User.findOne({ googleId: profile.id });

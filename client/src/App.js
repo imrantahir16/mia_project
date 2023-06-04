@@ -14,6 +14,7 @@ import Completion from "./pages/Completion";
 import ForgotPassword from "./pages/ForgotPassword";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Plans from "./pages/Plans";
+import PrivacyPolicies from "./pages/PrivacyPolicies";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgotPassword" element={<ForgotPassword />} />
+      <Route path="/privacypolicy" element={<PrivacyPolicies />} />
 
       {/* protected Routes */}
       <Route element={<ProtectedRoute />}>

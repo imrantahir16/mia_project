@@ -6,7 +6,7 @@ import Spinner from "../components/common/Spinner";
 
 const Plans = () => {
   const { user } = useSelector((state) => state.auth);
-  const [plan, setPlan] = useState("");
+  const [plan, setPlan] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const config = {
     headers: {
@@ -14,12 +14,24 @@ const Plans = () => {
     },
   };
 
+  const billingPortalHandler = async () => {
+    const { data: res } = await axios.post(
+      "api/subs/customer-portal",
+      {},
+      config
+    );
+    console.log(res.data);
+
+    window.location.href = res.url;
+  };
+
   const fetchPlan = async () => {
     const { data: res } = await axios.get("api/plans", config);
     setPlan(res.plan);
-    console.log(res.plan);
+    console.log(res);
     setIsLoading(false);
   };
+
   useEffect(() => {
     fetchPlan();
   }, []);
@@ -27,7 +39,17 @@ const Plans = () => {
     <section className="text-center">
       <Container>
         {isLoading && <Spinner />}
-        {plan && <h2 className="mt-5">You have subscribed to our {plan}</h2>}
+        {plan && (
+          <>
+            <h2 className="mt-5">You have subscribed to our {plan.planName}</h2>
+            <button
+              className="btn btn-primary my-5"
+              onClick={billingPortalHandler}
+            >
+              Manage you plan
+            </button>
+          </>
+        )}
         {!plan && !isLoading && (
           <>
             <h2 className="mt-5">You have not subscribed to any plan yet</h2>

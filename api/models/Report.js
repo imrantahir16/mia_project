@@ -3,8 +3,6 @@ const Schema = mongoose.Schema;
 
 const reportSchema = new Schema(
   {
-    // user_id
-    // soft delete ,
     userId: {
       type: Schema.Types.ObjectId,
       required: true,

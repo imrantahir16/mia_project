@@ -4,9 +4,7 @@ const Tow = require("../models/Tow");
 const getAllTows = async (req, res) => {
   const tows = await Tow.find();
   if (!tows) return res.status(404).json({ message: "No Tow contact found" });
-  // if (req.roles[1] === ROLES_LIST.Admin) {
-  //   return res.status(200).json(tows);
-  // }
+
   const filteredTows = tows.filter(
     (c) => c.addedBy === ROLES_LIST.Admin || c.userId.toString() === req.userId
   );

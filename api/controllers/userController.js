@@ -2,8 +2,6 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const QRCode = require("qrcode");
-const Jimp = require("jimp");
-const qrcodeReader = require("qrcode-reader");
 
 const getAllUsers = async (req, res) => {
   const users = await User.find();
