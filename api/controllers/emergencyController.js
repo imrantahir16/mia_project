@@ -42,7 +42,7 @@ const createEmergency = async (req, res) => {
   const foundEmergency = await Emergency.findOne({
     contact,
     userId: req.userId,
-  }).exec();
+  });
 
   if (foundEmergency)
     return res

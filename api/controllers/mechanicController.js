@@ -45,7 +45,7 @@ const createMechanic = async (req, res) => {
   const foundMechanic = await Mechanic.findOne({
     contact,
     userId: req.userId,
-  }).exec();
+  });
   if (foundMechanic)
     return res.status(409).json({ message: "Mechanic contact already exists" });
 

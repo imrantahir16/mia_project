@@ -36,7 +36,10 @@ const createTow = async (req, res) => {
   const { name, contact } = req.body;
   let result;
 
-  const foundTow = await Tow.findOne({ contact, userId: req.userId }).exec();
+  const foundTow = await Tow.findOne({
+    contact,
+    userId: req.userId,
+  });
   if (foundTow)
     return res.status(409).json({ message: "Tow contact already exists" });
 
