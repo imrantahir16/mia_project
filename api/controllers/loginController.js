@@ -16,6 +16,9 @@ const loginUser = async (req, res) => {
     const match = await bcrypt.compare(password, foundUser.password);
     if (!match) return res.status(400).json({ message: "Incorrect password" });
 
+    const roles = Object.values(foundUser.roles).filter(Boolean);
+    const accessToken = accessTokenGen(foundUser._id, roles);
+
     if (foundUser.isVerified === false) {
       const code = otpGenerator();
       const expiry = moment().add(30, "minutes");
@@ -31,12 +34,11 @@ const loginUser = async (req, res) => {
       await foundUser.save();
 
       return res.status(401).send({
+        accessToken,
+        user: foundUser,
         message: "Pending Account Verification. OTP is sent to your email!",
       });
     }
-
-    const roles = Object.values(foundUser.roles).filter(Boolean);
-    const accessToken = accessTokenGen(foundUser._id, roles);
 
     if (foundUser.isSubscribed !== true) {
       const subscriptions = await stripe.subscriptions.list(
