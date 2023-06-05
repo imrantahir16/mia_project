@@ -1,8 +1,8 @@
 const User = require("../models/User");
 const { sendResetPasswordEmail } = require("../utils/sendEmail");
 const bcrypt = require("bcrypt");
-const otpGenerator = require("../utils/otpGenerator");
 const moment = require("moment/moment");
+const otpGenerator = require("../utils/otpGenerator");
 
 const sendOTP = async (req, res) => {
   try {
@@ -43,9 +43,10 @@ const sendOTP = async (req, res) => {
     }
 
     if (result) {
-      return res
-        .status(200)
-        .json({ message: "Password reset OTP sent to your email account" });
+      return res.status(200).json({
+        otp: user.otp,
+        message: "Password reset OTP sent to your email account",
+      });
     } else {
       return res.status(500).json({ message: "Email could not sent" });
     }
@@ -55,11 +56,19 @@ const sendOTP = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { otp, password } = req.body;
+  const { otp, password, email } = req.body;
   try {
-    const user = await User.findOne({ otp });
-    if (!user)
-      return res.status(400).json({ message: "OTP is invalid or expired" });
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    console.log(parseInt(otp));
+    console.log(user.otp);
+
+    if (parseInt(otp) !== user.otp)
+      return res.status(400).json({ message: "OTP is invalid" });
+
+    if (moment() > moment(user.otpExpiry))
+      return res.status(400).json({ message: "OTP is expired" });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);

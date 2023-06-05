@@ -47,11 +47,23 @@ const validateChangePasswordData = [
 ];
 
 const validateResetPasswordData = [
+  body("otp")
+    .notEmpty()
+    .withMessage("OTP is required")
+    .isLength({ min: 6 })
+    .withMessage("OTP must be at least 6 digits")
+    .isInt()
+    .withMessage("OTP must be a number"),
   body("password")
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters"),
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Email is not valid"),
   body("confirmPassword")
     .custom((value, { req }) => {
       return value === req.body.password;
