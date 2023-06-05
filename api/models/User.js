@@ -9,7 +9,6 @@ const userSchema = new Schema(
     },
     name: {
       type: String,
-      required: [true, "Please add your name"],
       min: 3,
     },
     email: {

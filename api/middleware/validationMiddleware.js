@@ -109,6 +109,23 @@ const validateLoginData = [
     next();
   },
 ];
+const validateGoogleLoginData = [
+  body("googleId").notEmpty().withMessage("Google ID is required"),
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Email is not valid"),
+  body("name").optional(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
 
 const validateEmailData = [
   body("email")
@@ -238,4 +255,5 @@ module.exports = {
   validateChangePasswordData,
   validateResetPasswordData,
   validateOTPData,
+  validateGoogleLoginData,
 };

@@ -68,6 +68,61 @@ const loginUser = async (req, res) => {
   }
 };
 
+const googleLoginUser = async (req, res) => {
+  const { googleId, email, name = null } = req.body;
+  let userResponse;
+  let foundUser;
+  try {
+    foundUser = await User.findOne({ email });
+    if (foundUser) {
+      const roles = Object.values(foundUser.roles).filter(Boolean);
+      const accessToken = accessTokenGen(foundUser._id, roles);
+      if (foundUser.googleId === googleId) {
+        userResponse = {
+          accessToken,
+          user: foundUser,
+        };
+        return res.status(200).json(userResponse);
+      } else if (foundUser.googleId === "") {
+        foundUser.googleId = googleId;
+        await foundUser.save();
+        userResponse = {
+          accessToken,
+          user: foundUser,
+        };
+        return res.status(200).json(userResponse);
+      }
+    } else {
+      const customer = await stripe.customers.create(
+        {
+          name,
+          email,
+        },
+        { apiKey: process.env.STRIPE_SECRET_KEY }
+      );
+
+      const newUser = await User.create({
+        googleId,
+        name,
+        email,
+        stripeCustomerId: customer.id,
+        isVerified: true,
+      });
+
+      const roles = Object.values(newUser.roles).filter(Boolean);
+      const accessToken = accessTokenGen(newUser._id, roles);
+
+      userResponse = {
+        accessToken,
+        user: newUser,
+      };
+      return res.status(200).json(userResponse);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const verifyUserAccount = async (req, res) => {
   if (!req.userId) return res.status(400).json({ message: "Invalid user Id" });
 
@@ -134,4 +189,4 @@ const resendOtp = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, verifyUserAccount, resendOtp };
+module.exports = { loginUser, googleLoginUser, verifyUserAccount, resendOtp };
