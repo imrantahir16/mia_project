@@ -61,6 +61,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({
       accessToken,
       user: foundUser,
+      otp: foundUser.otp,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -73,7 +74,10 @@ const verifyUserAccount = async (req, res) => {
   const user = await User.findById(req.userId);
 
   if (!user) return res.status(404).send({ message: "User Not found." });
-  if (req.body.otp == 1234 && process.env.NODE_ENV === "Development") {
+  if (
+    parseInt(req.body.otp) == 12345 &&
+    process.env.NODE_ENV === "Development"
+  ) {
     const roles = Object.values(user.roles).filter(Boolean);
     const accessToken = accessTokenGen(user._id, roles);
     user.isVerified = true;
@@ -85,7 +89,9 @@ const verifyUserAccount = async (req, res) => {
       .json({ accessToken, user: user, message: "Account verified" });
   }
 
-  if (user.otp !== req.body.otp)
+  console.log(user);
+  console.log(user.otp, req.body.otp);
+  if (user.otp !== parseInt(req.body.otp))
     return res.status(400).json({
       message: "OTP is invalid",
     });

@@ -10,12 +10,13 @@ const { registerUser } = require("../controllers/registerController");
 const {
   validateRegisterData,
   validateLoginData,
+  validateOTPData,
 } = require("../middleware/validationMiddleware");
 const verifyJWT = require("../middleware/verifyJWT");
 
 router.post("/register", validateRegisterData, registerUser);
 router.post("/login", validateLoginData, loginUser);
-router.post("/verify", verifyJWT, verifyUserAccount);
+router.post("/verify", validateOTPData, verifyJWT, verifyUserAccount);
 router.get("/resendotp", verifyJWT, resendOtp);
 
 router.get(

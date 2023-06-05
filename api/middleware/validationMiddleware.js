@@ -50,8 +50,8 @@ const validateResetPasswordData = [
   body("otp")
     .notEmpty()
     .withMessage("OTP is required")
-    .isLength({ min: 6 })
-    .withMessage("OTP must be at least 6 digits")
+    .isLength({ min: 5 })
+    .withMessage("OTP must be at least 5 digits")
     .isInt()
     .withMessage("OTP must be a number"),
   body("password")
@@ -69,6 +69,22 @@ const validateResetPasswordData = [
       return value === req.body.password;
     })
     .withMessage("Password does not match"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
+const validateOTPData = [
+  body("otp")
+    .notEmpty()
+    .withMessage("OTP is required")
+    .isLength({ min: 5 })
+    .withMessage("OTP must be at least 5 digits")
+    .isInt()
+    .withMessage("OTP must be a number"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -221,4 +237,5 @@ module.exports = {
   validateEmailData,
   validateChangePasswordData,
   validateResetPasswordData,
+  validateOTPData,
 };
