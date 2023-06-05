@@ -20,7 +20,9 @@ const registerUser = async (req, res) => {
 
     const customer = await stripe.customers.create(
       {
+        name,
         email,
+        phone: phone || null,
       },
       { apiKey: process.env.STRIPE_SECRET_KEY }
     );
@@ -47,8 +49,8 @@ const registerUser = async (req, res) => {
     const roles = Object.values(newUser.roles).filter(Boolean);
     const accessToken = accessTokenGen(newUser._id, roles);
     res.status(201).json({
-      isVerified: newUser.isVerified,
       accessToken,
+      user: newUser,
       message:
         "User was registered successfully! Please check your email for confirmation code",
     });

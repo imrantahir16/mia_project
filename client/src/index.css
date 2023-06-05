@@ -65,10 +65,16 @@ a {
 .showPassword {
   cursor: pointer;
   position: absolute;
-  right: 1rem;
   top: 0.9rem;
-  /* padding: 0.5rem; */
   max-height: 100%;
+  transition: right 250ms ease;
+}
+
+.notValidated {
+  right: 1rem;
+}
+.validated {
+  right: 2rem;
 }
 
 @keyframes spin {

@@ -15,9 +15,11 @@ import axios, { axiosPrivate } from "../api/axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, isLoading, isSuccess, isError, message } = useSelector(
@@ -26,7 +28,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isError) {
-      console.log("error");
+      console.log(message);
     }
 
     if (isSuccess || user) {
@@ -47,8 +49,20 @@ const Login = () => {
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    const userData = { email, password };
-    dispatch(login(userData));
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      if (!email) {
+        setEmailError("Email is required");
+      }
+      if (!password) {
+        setPasswordError("Password is required");
+      }
+    } else {
+      const userData = { email, password };
+      dispatch(login(userData));
+    }
+    setValidated(true);
   };
 
   const googleLoginHandler = async (e) => {
@@ -62,7 +76,12 @@ const Login = () => {
         style={{ minHeight: "calc(100vh - 56px)" }}
       >
         <Card className="p-3 mw-100">
-          <Form className="mw-100" onSubmit={loginHandler}>
+          <Form
+            noValidate
+            validated={validated}
+            className="mw-100"
+            onSubmit={loginHandler}
+          >
             <div className="d-flex align-item-center justify-content-center py-3">
               <h1 className="text-primary">Login</h1>
             </div>
@@ -73,12 +92,16 @@ const Login = () => {
                 className="mb-1"
               >
                 <Form.Control
+                  required
                   name="email"
                   value={email}
                   onChange={(e) => onChangeHandler(e)}
                   type="email"
                   placeholder="Email"
                 />
+                <Form.Control.Feedback className={"ms-3"} type="invalid">
+                  {emailError}
+                </Form.Control.Feedback>
               </FloatingLabel>
             </Col>
             <Col sm={12}>
@@ -88,7 +111,8 @@ const Login = () => {
                 className="mb-1"
               >
                 <span
-                  className="showPassword"
+                  className={`showPassword
+                    ${!validated ? "notValidated" : "validated"}`}
                   onClick={() => setShowPassword((prev) => !prev)}
                 >
                   {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
@@ -98,10 +122,15 @@ const Login = () => {
                   placeholder="password"
                   name="password"
                   value={password}
+                  required
                   onChange={(e) => onChangeHandler(e)}
                 />
+                <Form.Control.Feedback className={"ms-3"} type="invalid">
+                  {passwordError}
+                </Form.Control.Feedback>
               </FloatingLabel>
             </Col>
+            {message && <Form.Label>{message}</Form.Label>}
             <Form.Group
               as={Row}
               className="mb-3"

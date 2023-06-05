@@ -2,7 +2,11 @@ const { body, validationResult } = require("express-validator");
 
 const validateRegisterData = [
   body("name").notEmpty().withMessage("Name is required"),
-  body("email").isEmail().withMessage("Email is not valid"),
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Email is not valid"),
   body("phone")
     .matches(/^(\+?\d{1,3}[- ]?)?\d{10}$/)
     .withMessage("Phone number is not valid"),

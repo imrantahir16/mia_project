@@ -4,6 +4,7 @@ const moment = require("moment/moment");
 const accessTokenGen = require("../utils/accessTokenGen");
 const { sendConfirmationEmail } = require("../utils/sendEmail");
 const otpGenerator = require("../utils/otpGenerator");
+const stripe = require("../utils/stripe");
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -37,11 +38,27 @@ const loginUser = async (req, res) => {
     const roles = Object.values(foundUser.roles).filter(Boolean);
     const accessToken = accessTokenGen(foundUser._id, roles);
 
+    if (foundUser.isSubscribed !== true) {
+      const subscriptions = await stripe.subscriptions.list(
+        {
+          customer: foundUser.stripeCustomerId,
+          status: "all",
+          expand: ["data.default_payment_method"],
+        },
+        {
+          apiKey: process.env.STRIPE_SECRET_KEY,
+        }
+      );
+      foundUser.isSubscribed =
+        subscriptions?.data[0]?.status === "active" ? true : false;
+      foundUser.subscribedPlanId = subscriptions?.data[0]?.plan.id || "";
+
+      await foundUser.save();
+    }
+
     res.status(200).json({
-      email,
       accessToken,
-      userId: foundUser._id,
-      isVerified: foundUser.isVerified,
+      user: foundUser,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -55,11 +72,15 @@ const verifyUserAccount = async (req, res) => {
 
   if (!user) return res.status(404).send({ message: "User Not found." });
   if (req.body.otp == 1234 && process.env.NODE_ENV === "Development") {
+    const roles = Object.values(user.roles).filter(Boolean);
+    const accessToken = accessTokenGen(user._id, roles);
     user.isVerified = true;
     user.otp = null;
     user.otpExpiry = null;
     await user.save();
-    return res.status(200).json({ message: "Account verified" });
+    return res
+      .status(200)
+      .json({ accessToken, user: user, message: "Account verified" });
   }
 
   if (user.otp !== req.body.otp)
@@ -70,11 +91,15 @@ const verifyUserAccount = async (req, res) => {
   if (moment() > moment(user.otpExpiry))
     return res.status(400).json({ message: "OTP is expired" });
 
+  const roles = Object.values(user.roles).filter(Boolean);
+  const accessToken = accessTokenGen(user._id, roles);
   user.isVerified = true;
   user.otp = null;
   user.otpExpiry = null;
   await user.save();
-  res.status(200).json({ message: "Account verified" });
+  res
+    .status(200)
+    .json({ accessToken, user: user, message: "Account verified" });
 };
 
 const resendOtp = async (req, res) => {
