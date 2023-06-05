@@ -38,7 +38,10 @@ const changePassword = async (req, res) => {
     return res.status(404).json({ message: `User does not exist` });
 
   try {
-    if (foundUser.password) {
+    if (foundUser.password === null)
+      return res.status(400).json({ message: "Incorrect old password" });
+
+    if (foundUser.password !== null) {
       if (!req.body.oldPassword)
         return res.status(400).json({
           errors: [
@@ -63,7 +66,6 @@ const changePassword = async (req, res) => {
           ],
         });
     }
-
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     foundUser.password = hashedPassword;

@@ -91,6 +91,8 @@ const googleLoginUser = async (req, res) => {
           user: foundUser,
         };
         return res.status(200).json(userResponse);
+      } else {
+        return res.status(400).json({ message: "Invalid Google Id" });
       }
     } else {
       const customer = await stripe.customers.create(

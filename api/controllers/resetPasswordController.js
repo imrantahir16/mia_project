@@ -61,9 +61,6 @@ const resetPassword = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
-    console.log(parseInt(otp));
-    console.log(user.otp);
-
     if (parseInt(otp) !== user.otp)
       return res.status(400).json({ message: "OTP is invalid" });
 

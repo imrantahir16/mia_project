@@ -2,8 +2,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const passport = require("passport");
-const session = require("express-session");
 
 // internal imports
 const connectDB = require("./config/db");
@@ -20,8 +18,6 @@ const { uploadHandler } = require("./middleware/uploadMiddleware");
 
 require("dotenv").config();
 require("colors");
-require("./config/passport")(passport);
-
 // initializing app
 const app = express();
 connectDB();
@@ -37,19 +33,6 @@ app.use(express.static("public"));
 // built-in middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// session middleware
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
-// passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 // routers
 app.use("/api/auth", require("./routes/auth"));
@@ -78,3 +61,5 @@ mongoose.connection.once("open", () => {
     console.log(`Server is running on port ${PORT}`.cyan.underline);
   });
 });
+
+// module.exports = upload;

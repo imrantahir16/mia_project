@@ -5,7 +5,7 @@ const userSchema = new Schema(
   {
     googleId: {
       type: String,
-      default: "",
+      default: null,
     },
     name: {
       type: String,
@@ -21,6 +21,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
+      default: null,
     },
     roles: {
       User: {
