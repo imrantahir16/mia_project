@@ -11,7 +11,6 @@ const towSchema = new Schema(
     contact: {
       type: String,
       required: true,
-      unique: true,
     },
     addedBy: {
       type: Number,
