@@ -1,5 +1,6 @@
 const ROLES_LIST = require("../config/roles_list");
 const Emergency = require("../models/Emergency");
+const { ObjectId } = require("mongodb");
 
 const getAllEmergencies = async (req, res) => {
   const emergencies = await Emergency.find();
@@ -15,13 +16,20 @@ const getAllEmergencies = async (req, res) => {
 const getEmergency = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Emergency id is required" });
+
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
   const emergency = await Emergency.findOne({ _id: req.params.id }).exec();
   if (!emergency)
     return res
       .status(409)
       .json({ message: `Emergency ID ${req.params.id} not found` });
 
-  if (emergency.userId.toString() !== req.userId)
+  if (
+    emergency.userId.toString() !== req.userId &&
+    emergency.addedBy !== ROLES_LIST.Admin
+  )
     return res.status(401).json({ message: `Unathorized to get this contact` });
 
   res.json(emergency);
@@ -31,7 +39,11 @@ const createEmergency = async (req, res) => {
   const { name, contact } = req.body;
   let result;
 
-  const foundEmergency = await Emergency.findOne({ contact }).exec();
+  const foundEmergency = await Emergency.findOne({
+    contact,
+    userId: req.userId,
+  }).exec();
+
   if (foundEmergency)
     return res
       .status(409)
@@ -59,6 +71,8 @@ const deleteEmergency = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Emergency Id is required" });
 
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
   const emergency = await Emergency.findOne({ _id: req.params.id }).exec();
 
   if (!emergency)
@@ -67,13 +81,21 @@ const deleteEmergency = async (req, res) => {
       .json({ message: `Emergency ID ${req.params.id} not found` });
 
   if (emergency.userId.toString() !== req.userId)
-    return res.status(401).json({ message: `Unathorized to get this contact` });
+    return res
+      .status(401)
+      .json({ message: `Unathorized to delete this contact` });
 
-  const result = await emergency.deleteOne({ _id: req.params.id });
-  res.json(result);
+  await emergency.deleteOne({ _id: req.params.id });
+  res.status(200).json({ message: "Contact deleted" });
 };
 
 const updateEmergency = async (req, res) => {
+  if (!req.params.id)
+    return res.status(400).json({ message: "Mechanic Id is required" });
+
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
   const emergency = await Emergency.findOne({ _id: req.params.id });
 
   if (!emergency)
@@ -82,7 +104,9 @@ const updateEmergency = async (req, res) => {
     });
 
   if (emergency.userId.toString() !== req.userId)
-    return res.status(401).json({ message: `Unathorized to get this contact` });
+    return res
+      .status(401)
+      .json({ message: `Unathorized to update this contact` });
 
   if (req.body.name) emergency.name = req.body.name;
   if (req.body.contact) emergency.contact = req.body.contact;

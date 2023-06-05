@@ -6,7 +6,10 @@ const {
   getMechanic,
   updateMechanic,
 } = require("../controllers/mechanicController");
-const { validateContactData } = require("../middleware/validationMiddleware");
+const {
+  validateContactData,
+  validateContactUpdateData,
+} = require("../middleware/validationMiddleware");
 
 router
   .route("/")
@@ -16,7 +19,7 @@ router
 router
   .route("/:id")
   .get(getMechanic)
-  .put(validateContactData, updateMechanic)
+  .put(validateContactUpdateData, updateMechanic)
   .delete(deleteMechanic);
 
 module.exports = router;

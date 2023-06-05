@@ -142,6 +142,22 @@ const validateEmailData = [
   },
 ];
 
+const validateContactUpdateData = [
+  body("name").optional().notEmpty().withMessage("Name is required"),
+  body("contact")
+    .optional()
+    .notEmpty()
+    .withMessage("Contact number is required")
+    .isInt()
+    .withMessage("Contact must be a number"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
 const validateContactData = [
   body("name").notEmpty().withMessage("Name is required"),
   body("contact")
@@ -256,4 +272,5 @@ module.exports = {
   validateResetPasswordData,
   validateOTPData,
   validateGoogleLoginData,
+  validateContactUpdateData,
 };

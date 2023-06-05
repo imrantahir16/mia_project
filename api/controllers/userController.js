@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const QRCode = require("qrcode");
+const { ObjectId } = require("mongodb");
 
 const getAllUsers = async (req, res) => {
   const users = await User.find();
@@ -10,9 +11,13 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  console.log(req);
+  // console.log(req);
   const userId = req.params?.id ? req.params.id : req.userId;
   if (!userId) return res.status(400).json({ message: "User id is required" });
+
+  if (!ObjectId.isValid(userId))
+    return res.status(400).json({ message: "Invalid user id" });
+
   const user = await User.findOne({ _id: userId }).exec();
   if (!user) return res.status(204).json({ message: `User not found` });
   res.json(user);
@@ -117,7 +122,11 @@ const generateQrCode = async (req, res) => {
 
 const retrieveDriverInfo = async (req, res) => {
   const { userId } = req.params;
+  if (!ObjectId.isValid(userId))
+    return res.status(400).json({ message: "Invalid user id" });
+
   const foundUser = await User.findById(userId);
+  if (!foundUser) return res.status(404).json({ message: "User not found" });
   res.status(200).json({
     driverInfo: {
       license: foundUser.drivingLicense,

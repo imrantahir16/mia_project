@@ -6,7 +6,10 @@ const {
   getEmergency,
   updateEmergency,
 } = require("../controllers/emergencyController");
-const { validateContactData } = require("../middleware/validationMiddleware");
+const {
+  validateContactData,
+  validateContactUpdateData,
+} = require("../middleware/validationMiddleware");
 router
   .route("/")
   .get(getAllEmergencies)
@@ -15,7 +18,7 @@ router
 router
   .route("/:id")
   .get(getEmergency)
-  .put(validateContactData, updateEmergency)
+  .put(validateContactUpdateData, updateEmergency)
   .delete(deleteEmergency);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const ROLES_LIST = require("../config/roles_list");
 const Mechanic = require("../models/Mechanic");
+const { ObjectId } = require("mongodb");
 
 const getAllMechanics = async (req, res) => {
   console.log(req.userId);
@@ -17,6 +18,9 @@ const getMechanic = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Mechanic id is required" });
 
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
   const mechanic = await Mechanic.findOne({
     _id: req.params.id,
   }).exec();
@@ -25,7 +29,10 @@ const getMechanic = async (req, res) => {
       .status(404)
       .json({ message: `Mechanic ID ${req.params.id} not found` });
 
-  if (mechanic.userId.toString() !== req.userId)
+  if (
+    mechanic.userId.toString() !== req.userId &&
+    mechanic.addedBy !== ROLES_LIST.Admin
+  )
     return res.status(401).json({ message: `Unathorized to get this contact` });
 
   res.json(mechanic);
@@ -34,7 +41,11 @@ const getMechanic = async (req, res) => {
 const createMechanic = async (req, res) => {
   const { name, contact } = req.body;
   let result;
-  const foundMechanic = await Mechanic.findOne({ contact }).exec();
+
+  const foundMechanic = await Mechanic.findOne({
+    contact,
+    userId: req.userId,
+  }).exec();
   if (foundMechanic)
     return res.status(409).json({ message: "Mechanic contact already exists" });
 
@@ -59,6 +70,10 @@ const createMechanic = async (req, res) => {
 const deleteMechanic = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Mechanic Id is required" });
+
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
   const mechanic = await Mechanic.findOne({
     _id: req.params.id,
   }).exec();
@@ -70,12 +85,18 @@ const deleteMechanic = async (req, res) => {
   if (mechanic.userId.toString() !== req.userId)
     return res
       .status(401)
-      .json({ message: `Unauthorized to remove this contact` });
-  const result = await mechanic.deleteOne({ _id: req.params.id });
-  res.json(result);
+      .json({ message: `Unauthorized to delete this contact` });
+  await mechanic.deleteOne({ _id: req.params.id });
+  res.status(200).json({ message: "Contact deleted" });
 };
 
 const updateMechanic = async (req, res) => {
+  if (!req.params.id)
+    return res.status(400).json({ message: "Mechanic Id is required" });
+
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
   const mechanic = await Mechanic.findOne({
     _id: req.params.id,
   });

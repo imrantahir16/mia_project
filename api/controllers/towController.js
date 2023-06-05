@@ -1,5 +1,6 @@
 const ROLES_LIST = require("../config/roles_list");
 const Tow = require("../models/Tow");
+const { ObjectId } = require("mongodb");
 
 const getAllTows = async (req, res) => {
   const tows = await Tow.find();
@@ -14,6 +15,10 @@ const getAllTows = async (req, res) => {
 const getTow = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Tow id is required" });
+
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
   const tow = await Tow.findOne({
     _id: req.params.id,
   }).exec();
@@ -22,7 +27,7 @@ const getTow = async (req, res) => {
       .status(404)
       .json({ message: `Tow ID ${req.params.id} not found` });
 
-  if (tow.userId.toString() !== req.userId)
+  if (tow.userId.toString() !== req.userId && tow.addedBy !== ROLES_LIST.Admin)
     return res.status(401).json({ message: `Unathorized to get this contact` });
   res.json(tow);
 };
@@ -31,7 +36,7 @@ const createTow = async (req, res) => {
   const { name, contact } = req.body;
   let result;
 
-  const foundTow = await Tow.findOne({ contact }).exec();
+  const foundTow = await Tow.findOne({ contact, userId: req.userId }).exec();
   if (foundTow)
     return res.status(409).json({ message: "Tow contact already exists" });
 
@@ -54,8 +59,12 @@ const createTow = async (req, res) => {
 };
 
 const deleteTow = async (req, res) => {
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
   if (!req.params.id)
     return res.status(400).json({ message: "Tow Id is required" });
+
   const tow = await Tow.findOne({
     _id: req.params.id,
   }).exec();
@@ -66,13 +75,16 @@ const deleteTow = async (req, res) => {
 
   if (tow.userId.toString() !== req.userId)
     return res.status(401).json({
-      message: `Unauthorized to update this contact`,
+      message: `Unauthorized to delete this contact`,
     });
-  const result = await tow.deleteOne({ _id: req.params.id });
-  res.json(result);
+  await tow.deleteOne({ _id: req.params.id });
+  res.status(200).json({ message: "Contact deleted" });
 };
 
 const updateTow = async (req, res) => {
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
   const tow = await Tow.findOne({ _id: req.params.id });
   if (!tow)
     return res
