@@ -147,7 +147,7 @@ const Tows = () => {
                         <div className="d-flex align-items-center gap-2 justify-content-center">
                           <Button
                             className="btn btn-sm btn-primary d-flex align-items-center justify-content-center p-2"
-                            disabled={item.userId !== user?.userId}
+                            disabled={item.userId !== user?.user?._id}
                             onClick={() => editModalShowHandler(item._id)}
                           >
                             <FiEdit />
@@ -160,7 +160,7 @@ const Tows = () => {
                           )}
                           <Button
                             className="btn btn-sm btn-danger d-flex align-items-center justify-content-center p-2"
-                            disabled={item.userId !== user?.userId}
+                            disabled={item.userId !== user?.user?._id}
                             onClick={() => deleteModalShowHandler(item._id)}
                           >
                             <HiOutlineTrash />
