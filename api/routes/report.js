@@ -16,7 +16,7 @@ const { uploadHandler } = require("../middleware/uploadMiddleware");
 
 router
   .route("/")
-  .get(verifyRoles(ROLES_LIST.Admin), getAllReports)
+  .get(getAllReports)
   .post(uploadHandler, validateReportData, generateReport);
 
 router

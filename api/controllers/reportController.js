@@ -1,9 +1,9 @@
 const Report = require("../models/Report");
 const fs = require("fs");
+const { ObjectId } = require("mongodb");
+const ROLES_LIST = require("../config/roles_list");
 
 const generateReport = async (req, res) => {
-  // console.log(req.userId);
-  // make this all field optional except lat lng
   if (!req.userId) return res.status(401).json({ message: "Unauthorized" });
   const newReport = {
     userId: req.userId,
@@ -25,14 +25,32 @@ const generateReport = async (req, res) => {
 
 const getAllReports = async (req, res) => {
   const reports = await Report.find();
-  if (!reports) return res.status(204).json({ message: "No Report found" });
-  res.status(200).json(reports);
+  if (!reports) return res.status(404).json({ message: "No Report found" });
+
+  if (req.roles.length > 1 && req.roles[1] === ROLES_LIST.Admin)
+    return res.status(200).json(reports);
+
+  const filteredReports = reports.filter((report) => {
+    return report.userId.toString() === req.userId;
+  });
+
+  if (!filteredReports)
+    return res.status(200).json({ message: "No Report found" });
+
+  res.status(200).json(filteredReports);
 };
 
 const getReport = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Report id is required" });
-  const report = await Report.findOne({ _id: req.params.id }).exec();
+
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid Id" });
+
+  const report = await Report.findOne({
+    _id: req.params.id,
+    userId: req.userId,
+  }).exec();
   if (!report)
     return res
       .status(404)
@@ -43,7 +61,10 @@ const getReport = async (req, res) => {
 const deleteReport = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "Report Id is required" });
-  const report = await Report.findOne({ _id: req.params.id }).exec();
+  const report = await Report.findOne({
+    _id: req.params.id,
+    userId: req.userId,
+  }).exec();
   if (!report)
     return res
       .status(404)
@@ -54,7 +75,13 @@ const deleteReport = async (req, res) => {
 
 const updateReport = async (req, res) => {
   // console.log(req.body);
-  const report = await Report.findOne({ _id: req.params.id });
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid id" });
+
+  const report = await Report.findOne({
+    _id: req.params.id,
+    userId: req.userId,
+  });
   if (!report)
     return res.status(400).json({
       message: `Report of ID ${req.params.id} does not exist`,
