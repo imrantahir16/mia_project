@@ -10,26 +10,35 @@ const getPriceController = async (req, res) => {
 };
 
 const createCheckoutSession = async (req, res) => {
-  const user = await User.findOne({ _id: req.userId });
-  const session = await stripe.checkout.sessions.create(
-    {
-      mode: "subscription",
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price: req.body.priceId,
-          quantity: 1,
-        },
-      ],
+  try {
+    const user = await User.findOne({ _id: req.userId });
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: "subscription",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price: req.body.priceId,
+            quantity: 1,
+          },
+        ],
 
-      success_url: `${process.env.CLIENT_BASE_URL}subscription/completion`,
-      cancel_url: `${process.env.CLIENT_BASE_URL}subscription`,
-      customer: user.stripeCustomerId,
-    },
-    { apiKey: process.env.STRIPE_SECRET_KEY }
-  );
+        success_url: `${process.env.CLIENT_BASE_URL}subscription/completion`,
+        cancel_url: `${process.env.CLIENT_BASE_URL}subscription`,
+        customer: user.stripeCustomerId,
+      },
+      { apiKey: process.env.STRIPE_SECRET_KEY }
+    );
 
-  return res.json(session);
+    // Update the user's subscription status in MongoDB
+    user.isSubscribed = true;
+    user.subscribedPlanId = req.body.priceId;
+    await user.save();
+
+    return res.json(session);
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to create checkout session" });
+  }
 };
 
 const billingPortal = async (req, res) => {

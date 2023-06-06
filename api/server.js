@@ -15,6 +15,9 @@ const {
   infoUploader,
 } = require("./controllers/driverController");
 const { uploadHandler } = require("./middleware/uploadMiddleware");
+const {
+  handleCheckoutSessionCompleted,
+} = require("./controllers/stripeWebhookController");
 
 require("dotenv").config();
 require("colors");
@@ -37,6 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 // routers
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/reset-password", require("./routes/resetPassword"));
+app.post("/api/webhook/stripe", handleCheckoutSessionCompleted);
 
 app.use(verifyJWT);
 app.use("/api/emergency", require("./routes/emergency"));

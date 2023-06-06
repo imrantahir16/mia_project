@@ -40,24 +40,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    if (foundUser.isSubscribed !== true) {
-      const subscriptions = await stripe.subscriptions.list(
-        {
-          customer: foundUser.stripeCustomerId,
-          status: "all",
-          expand: ["data.default_payment_method"],
-        },
-        {
-          apiKey: process.env.STRIPE_SECRET_KEY,
-        }
-      );
-      foundUser.isSubscribed =
-        subscriptions?.data[0]?.status === "active" ? true : false;
-      foundUser.subscribedPlanId = subscriptions?.data[0]?.plan.id || "";
-
-      await foundUser.save();
-    }
-
     res.status(200).json({
       accessToken,
       user: foundUser,
