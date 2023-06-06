@@ -31,9 +31,9 @@ const createCheckoutSession = async (req, res) => {
     );
 
     // Update the user's subscription status in MongoDB
-    user.isSubscribed = true;
-    user.subscribedPlanId = req.body.priceId;
-    await user.save();
+    // user.isSubscribed = true;
+    // user.subscribedPlanId = req.body.priceId;
+    // await user.save();
 
     return res.json(session);
   } catch (error) {
