@@ -26,13 +26,17 @@ const getUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   if (!req.params.id)
     return res.status(400).json({ message: "User Id is required" });
+
+  if (!ObjectId.isValid(req.params.id))
+    return res.status(400).json({ message: "Invalid user id" });
+
   const user = await User.findOne({ _id: req.params.id }).exec();
   if (!user)
     return res
       .status(404)
       .json({ message: `User ID ${req.params.id} not found` });
-  const result = await User.deleteOne({ _id: req.params.id });
-  res.json(result);
+  await User.deleteOne({ _id: req.params.id });
+  res.status(200).json({ message: "User account deleted" });
 };
 
 const changePassword = async (req, res) => {
@@ -134,6 +138,7 @@ const retrieveDriverInfo = async (req, res) => {
     },
   });
 };
+
 module.exports = {
   getAllUsers,
   getUser,
