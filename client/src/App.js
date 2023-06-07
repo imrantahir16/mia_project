@@ -24,7 +24,8 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/privacypolicy" element={<PrivacyPolicies />} />
-
+      <Route path="/subscription" element={<Subscription />} />
+      <Route path="/subscription/completion" element={<Completion />} />
       {/* protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Home />} />
@@ -34,8 +35,6 @@ function App() {
         <Route path="users" element={<Users />} />
         <Route path="reports" element={<Reports />} />
         <Route path="/plans" element={<Plans />} />
-        <Route path="/subscription" element={<Subscription />} />
-        <Route path="/subscription/completion" element={<Completion />} />
       </Route>
 
       {/* Protected routes */}

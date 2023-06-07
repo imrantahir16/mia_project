@@ -38,6 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routers
+app.use("/", express.static("public"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/reset-password", require("./routes/resetPassword"));
 app.post("/api/webhook/stripe", handleCheckoutSessionCompleted);
