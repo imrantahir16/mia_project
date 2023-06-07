@@ -28,7 +28,6 @@ const handleCheckoutSessionCompleted = async (req, res) => {
       user.subscribedPlanId = subscriptions.data[0].plan.id;
       await user.save();
       console.log(user);
-      // console.log("User subscription updated successfully.");
       break;
     default:
       return res.status(400).end();
