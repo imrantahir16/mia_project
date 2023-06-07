@@ -23,8 +23,8 @@ const createCheckoutSession = async (req, res) => {
           },
         ],
 
-        success_url: `${process.env.CLIENT_BASE_URL}subscription/completion`,
-        cancel_url: `${process.env.CLIENT_BASE_URL}subscription`,
+        success_url: `${process.env.BASE_URL}/success.html`,
+        cancel_url: `${process.env.BASE_URL}/cancel.html`,
         customer: user.stripeCustomerId,
       },
       { apiKey: process.env.STRIPE_SECRET_KEY }

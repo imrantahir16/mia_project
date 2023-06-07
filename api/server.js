@@ -2,7 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
+const path = require("path");
 // internal imports
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorMiddleware");
@@ -38,7 +38,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routers
-app.use("/", express.static("public"));
+app.get("/api/success(.html)?", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "success.html"));
+});
+app.get("/api/cancel(.html)?", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "cancel.html"));
+});
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/reset-password", require("./routes/resetPassword"));
 app.post("/api/webhook/stripe", handleCheckoutSessionCompleted);
