@@ -39,10 +39,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // routers
 app.get("/api/success(.html)?", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "success.html"));
+  res.sendFile(path.join(__dirname, "views", "success.html"));
 });
 app.get("/api/cancel(.html)?", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "cancel.html"));
+  res.sendFile(path.join(__dirname, "views", "cancel.html"));
 });
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/reset-password", require("./routes/resetPassword"));
