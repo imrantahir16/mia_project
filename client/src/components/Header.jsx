@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { checkUserRoles } from "../utils/utils";
 
 const Header = () => {
   const { user } = useSelector((state) => state.auth);
@@ -17,11 +18,7 @@ const Header = () => {
   const logoutHandler = () => {
     dispatch(logout());
   };
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate("/login");
-  //   }
-  // }, [user]);
+
   return (
     <Navbar bg="light" expand="md">
       <Container>
@@ -34,7 +31,7 @@ const Header = () => {
             <Offcanvas.Title id={`offcanvasNavbarLabel`}></Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            {user && (
+            {checkUserRoles(user) && (
               <Nav className="d-flex align-items-center justify-content-center justify-content-md-end flex-grow-1 pe-3">
                 <a className="nav-link" aria-current="page" href="/">
                   Home
@@ -56,9 +53,9 @@ const Header = () => {
                   <NavDropdown.Item href="mechanics">Mechanic</NavDropdown.Item>
                   <NavDropdown.Item href="/tows">Tow</NavDropdown.Item>
                 </NavDropdown>
-                <a className="nav-link" href="/plans">
+                {/* <a className="nav-link" href="/plans">
                   Plans
-                </a>
+                </a> */}
                 <button
                   className="btn btn-primary ms-0 ms-md-4"
                   onClick={logoutHandler}

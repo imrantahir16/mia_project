@@ -17,13 +17,14 @@ const register = async (userData) => {
 const login = async (userData) => {
   const response = await axios.post(API_URL + "login", userData);
 
-  if (response.data) {
+  if (response.data.user.roles.hasOwnProperty("Admin")) {
     localStorage.setItem("user", JSON.stringify(response.data));
+    return response.data;
+  } else {
+    return response.data;
   }
 
-  console.log(response);
-
-  return response.data;
+  // console.log(response);
 };
 
 const logout = async () => {
