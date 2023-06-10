@@ -72,6 +72,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    policeId: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

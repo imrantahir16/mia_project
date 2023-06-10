@@ -7,7 +7,7 @@ const stripe = require("../utils/stripe");
 const accessTokenGen = require("../utils/accessTokenGen");
 
 const registerUser = async (req, res) => {
-  const { name, email, phone, password, confirmPassword } = req.body;
+  const { name, email, phone, password, confirmPassword, policeId } = req.body;
 
   const userExists = await User.findOne({ email }).exec();
 
@@ -34,6 +34,7 @@ const registerUser = async (req, res) => {
       email,
       phone,
       password: hashedPassword,
+      policeId,
       stripeCustomerId: customer.id,
       otp: code,
       otpExpiry: expiry,
