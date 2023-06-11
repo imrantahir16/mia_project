@@ -88,7 +88,7 @@ const changePassword = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const userId = req.userId;
-  const { name, phone } = req.body;
+  const { name, phone, policeId } = req.body;
   // console.log(req.files);
   const foundUser = await User.findOne({ _id: userId }).exec();
   if (!foundUser)
@@ -96,6 +96,7 @@ const updateProfile = async (req, res) => {
 
   if (name) foundUser.name = name;
   if (phone) foundUser.phone = phone;
+  if (policeId) foundUser.policeId = policeId;
   if (req.files.profileImage) {
     if (foundUser.profileImage !== "") {
       const filePath = foundUser.profileImage;
