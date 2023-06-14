@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 const QRCode = require("qrcode");
 const { ObjectId } = require("mongodb");
+const ROLES_LIST = require("../config/roles_list");
 
 const getAllUsers = async (req, res) => {
   const users = await User.find();
@@ -12,7 +13,28 @@ const getAllUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   // console.log(req);
-  const userId = req.params?.id ? req.params.id : req.userId;
+  let userId;
+  if (
+    req.roles.length > 1 &&
+    req.roles[1] === ROLES_LIST.Admin &&
+    !req.params.id
+  ) {
+    userId = req.userId;
+  } else if (
+    req.roles.length > 1 &&
+    req.roles[1] === ROLES_LIST.Admin &&
+    req.params.id
+  ) {
+    userId = req.params.id;
+  } else if (
+    req.roles.length === 1 &&
+    req.params.id &&
+    req.userId !== req.params.id
+  ) {
+    return res.status(401).json({ message: "Unauthorized" });
+  } else {
+    userId = req.userId;
+  }
   if (!userId) return res.status(400).json({ message: "User id is required" });
 
   if (!ObjectId.isValid(userId))
@@ -87,17 +109,20 @@ const changePassword = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const userId = req.userId;
-  const { name, phone, policeId } = req.body;
+  const userId = req.params?.id ? req.params.id : req.userId;
+  const { name, phone, policeId, adminCode } = req.body;
   // console.log(req.files);
   const foundUser = await User.findOne({ _id: userId }).exec();
   if (!foundUser)
     return res.status(404).json({ message: `User does not exist` });
 
+  if (req.roles.length > 1 && req.roles[1] === ROLES_LIST.Admin) {
+    if (adminCode) foundUser.roles.Admin = adminCode;
+  }
   if (name) foundUser.name = name;
   if (phone) foundUser.phone = phone;
   if (policeId) foundUser.policeId = policeId;
-  if (req.files.profileImage) {
+  if (req?.files?.profileImage) {
     if (foundUser.profileImage !== "") {
       const filePath = foundUser.profileImage;
       fs.unlink(filePath, async (error) => {

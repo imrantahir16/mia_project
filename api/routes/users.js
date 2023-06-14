@@ -18,7 +18,7 @@ const {
 
 router.route("/all").get(verifyRoles(ROLES_LIST.Admin), getAllUsers);
 
-router.route("/").get(getUser).put(uploadHandler, updateProfile);
+router.route("/:id?").get(getUser).put(uploadHandler, updateProfile);
 
 router
   .route("/:id?")

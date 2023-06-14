@@ -64,7 +64,7 @@ const Emergencies = () => {
     return () => {
       dispatch(reset());
     };
-  }, [user, dispatch, message, isError]);
+  }, [user, dispatch, message, isError, navigate]);
 
   const createContactHandler = async (e) => {
     e.preventDefault();

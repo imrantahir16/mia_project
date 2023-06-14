@@ -16,7 +16,7 @@ const createReport = async (reportData, token) => {
 };
 
 // get Reports
-const getReports = async (token) => {
+const getAllReports = async (token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -24,6 +24,7 @@ const getReports = async (token) => {
   };
 
   const response = await axios.get(API_URL, config);
+  console.log(response);
 
   return response.data;
 };
@@ -54,7 +55,7 @@ const updateReport = async (reportId, reportData, token) => {
 
 const reportService = {
   createReport,
-  getReports,
+  getAllReports,
   deleteReport,
   updateReport,
 };

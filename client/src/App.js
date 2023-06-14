@@ -16,6 +16,8 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import PrivacyPolicies from "./pages/PrivacyPolicies";
 import RequireAuth from "./components/RequiredAuth";
 import Unauthorized from "./components/Unauthorized";
+import ReportDetailPage from "./components/reports/ReportDetailPage";
+import UserDetailPage from "./components/users/UserDetailPage";
 
 function App() {
   return (
@@ -35,7 +37,10 @@ function App() {
           <Route path="tows" element={<Tows />} />
           <Route path="mechanics" element={<Mechanics />} />
           <Route path="users" element={<Users />} />
+          <Route path="user-detail/:id" element={<UserDetailPage />} />
           <Route path="reports" element={<Reports />} />
+          <Route path="report-detail/:id" element={<ReportDetailPage />} />
+
           {/* <Route path="/plans" element={<Plans />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/subscription/completion" element={<Completion />} /> */}

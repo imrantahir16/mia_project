@@ -1,7 +1,5 @@
 import Table from "react-bootstrap/Table";
-import { FiEdit } from "react-icons/fi";
-import { HiOutlineTrash } from "react-icons/hi";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllUsers, reset } from "../features/users/userSlice";
 import Spinner from "../components/common/Spinner";
@@ -57,18 +55,21 @@ const Users = () => {
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Phone</th>
-                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => {
                 return (
-                  <tr key={user._id}>
+                  <tr
+                    key={user._id}
+                    onClick={() => navigate(`/user-detail/${user._id}`)}
+                  >
                     <td className="d-flex align-items-center justify-content-center">
                       <div className="userProfileImage">
                         {user.profileImage !== "" ? (
                           <img
-                            src={`${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`}
+                            src={`https://ilikemia.com/api/${user.profileImage}`}
+                            // src={`${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`}
                             alt={user.name}
                           />
                         ) : (
@@ -79,16 +80,6 @@ const Users = () => {
                     <td className="nowrap">{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.phone}</td>
-                    <td>
-                      <div className="d-flex align-items-center gap-2 justify-content-center">
-                        <button className="btn btn-sm btn-primary d-flex align-items-center justify-content-center p-2">
-                          <FiEdit />
-                        </button>
-                        <button className="btn btn-sm btn-danger d-flex align-items-center justify-content-center p-2">
-                          <HiOutlineTrash />
-                        </button>
-                      </div>
-                    </td>
                   </tr>
                 );
               })}

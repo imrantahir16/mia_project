@@ -32,12 +32,12 @@ export const createReport = createAsyncThunk(
 );
 
 // get all reports
-export const getReports = createAsyncThunk(
+export const getAllReports = createAsyncThunk(
   "reports/getAll",
   async (_, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.accessToken;
-      return await reportService.getReports(token);
+      return await reportService.getAllReports(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -97,15 +97,15 @@ const reportSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getReports.pending, (state) => {
+      .addCase(getAllReports.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getReports.fulfilled, (state, action) => {
+      .addCase(getAllReports.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.reports = action.payload;
       })
-      .addCase(getReports.rejected, (state, action) => {
+      .addCase(getAllReports.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

@@ -8,6 +8,10 @@ const reportSchema = new Schema(
       required: true,
       ref: "user",
     },
+    username: {
+      type: String,
+      default: "",
+    },
     location: {
       description: {
         type: String,

@@ -27,8 +27,9 @@ const Tows = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const { tows, isError, isLoading, message, editingId, deletingId } =
-    useSelector((state) => state.tow);
+  const { tows, isError, isLoading, message } = useSelector(
+    (state) => state.tow
+  );
 
   // const
 
@@ -64,7 +65,7 @@ const Tows = () => {
     return () => {
       dispatch(reset());
     };
-  }, [user, dispatch, message, isError]);
+  }, [user, dispatch, message, isError, navigate]);
 
   const createContactHandler = async (e) => {
     e.preventDefault();

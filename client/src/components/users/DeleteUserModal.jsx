@@ -1,13 +1,12 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTow } from "../../features/tows/towSlice";
-import { useEffect } from "react";
-const DeleteTowModal = ({ onShow, onClose }) => {
-  const { deletingId } = useSelector((state) => state.tow);
+import { deleteUser } from "../../features/users/userSlice";
+const DeleteUserModal = ({ onShow, onClose }) => {
+  const { deletingId } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const deleteHandler = () => {
-    dispatch(deleteTow(deletingId));
+    dispatch(deleteUser(deletingId));
     console.log(deletingId);
     onClose();
     window.location.reload(true);
@@ -15,9 +14,9 @@ const DeleteTowModal = ({ onShow, onClose }) => {
   return (
     <Modal show={onShow} onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Delete Contact</Modal.Title>
+        <Modal.Title>Delete User Account</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure to delete this contact?</Modal.Body>
+      <Modal.Body>Are you sure to delete this user account?</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
           Close
@@ -29,4 +28,4 @@ const DeleteTowModal = ({ onShow, onClose }) => {
     </Modal>
   );
 };
-export default DeleteTowModal;
+export default DeleteUserModal;
