@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllUsers, reset } from "../features/users/userSlice";
 import Spinner from "../components/common/Spinner";
 import { useNavigate } from "react-router-dom";
-import noProfileImage from "../assets/noprofile.webp";
+import noProfileImage from "../../public/assets/noprofile.webp";
 const Users = () => {
   const { users, isError, isLoading, message } = useSelector(
     (state) => state.user

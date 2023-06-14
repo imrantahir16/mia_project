@@ -13,8 +13,8 @@ import { BiSave } from "react-icons/bi";
 import DeleteUserModal from "./DeleteUserModal";
 import { setDeletingId } from "../../features/reports/reportSlice";
 import InputGroup from "react-bootstrap/InputGroup";
-import noProfileImage from "../../assets/noprofile.webp";
-import noImage from "../../assets/noImage.jpg";
+import noProfileImage from "../../../public/assets/noprofile.webp";
+import noImage from "../../../public/assets/noImage.jpg";
 
 const UserDetailPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -50,7 +50,7 @@ const UserDetailPage = () => {
     const fetchPlan = async () => {
       const response = await axios.get(`api/plans/${params.id}`, config);
       setSelectedUserPlan(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     };
     fetchPlan();
   }, []);
@@ -76,7 +76,7 @@ const UserDetailPage = () => {
       userData,
       config
     );
-    console.log(userType);
+    // console.log(userType);
   };
 
   return (
