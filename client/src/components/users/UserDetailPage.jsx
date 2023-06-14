@@ -13,8 +13,8 @@ import { BiSave } from "react-icons/bi";
 import DeleteUserModal from "./DeleteUserModal";
 import { setDeletingId } from "../../features/reports/reportSlice";
 import InputGroup from "react-bootstrap/InputGroup";
-import noProfileImage from "../../../public/assets/noprofile.webp";
-import noImage from "../../../public/assets/noImage.jpg";
+import noProfileImage from "../../assets/noprofile.webp";
+import noImage from "../../assets/noImage.jpg";
 
 const UserDetailPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
