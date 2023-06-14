@@ -13,8 +13,8 @@ import { BiSave } from "react-icons/bi";
 import DeleteUserModal from "./DeleteUserModal";
 import { setDeletingId } from "../../features/reports/reportSlice";
 import InputGroup from "react-bootstrap/InputGroup";
-import noProfileImage from "../../assets/noprofile.webp";
-import noImage from "../../assets/noImage.jpg";
+// import noProfileImage from "../../assets/noprofile.webp";
+// import noImage from "../../assets/noImage.jpg";
 
 const UserDetailPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -135,7 +135,7 @@ const UserDetailPage = () => {
                 ) : (
                   <img
                     className="userProfile"
-                    src={noProfileImage}
+                    src={"/noprofile.webp"}
                     alt={`${selectedUser.name}'s profile`}
                   />
                 )}
@@ -283,7 +283,7 @@ const UserDetailPage = () => {
                 ) : (
                   <img
                     className="userDataImage mt-3"
-                    src={noImage}
+                    src={"/noImage.jpg"}
                     alt={`${selectedUser.name}'s driving license`}
                   />
                 )}
@@ -300,7 +300,7 @@ const UserDetailPage = () => {
                 ) : (
                   <img
                     className="userDataImage mt-3"
-                    src={noImage}
+                    src={"/noImage.jpg"}
                     alt={`${selectedUser.name}'s insurance`}
                   />
                 )}
