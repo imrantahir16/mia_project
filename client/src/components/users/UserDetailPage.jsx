@@ -129,7 +129,7 @@ const UserDetailPage = () => {
                   <img
                     className="userProfile"
                     // src={`https://ilikemia.com/api/${selectedUser?.profileImage}`}
-                    src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
+                    src={`${process.env.REACT_APP_API_BASE_URL}api/${selectedUser?.profileImage}`}
                     alt={`${selectedUser.name}'s profile`}
                   />
                 ) : (
@@ -277,7 +277,7 @@ const UserDetailPage = () => {
                   <img
                     className="userDataImage mt-3"
                     // src={`https://ilikemia.com/api/${selectedUser?.drivingLicense}`}
-                    src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
+                    src={`${process.env.REACT_APP_API_BASE_URL}api/${selectedUser?.drivingLicense}`}
                     alt={`${selectedUser.name}'s driving license`}
                   />
                 ) : (
@@ -294,7 +294,7 @@ const UserDetailPage = () => {
                   <img
                     className="userDataImage mt-3"
                     // src={`https://ilikemia.com/api/${selectedUser?.insurance}`}
-                    src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
+                    src={`${process.env.REACT_APP_API_BASE_URL}api/${selectedUser?.insurance}`}
                     alt={`${selectedUser.name}'s insurance`}
                   />
                 ) : (
