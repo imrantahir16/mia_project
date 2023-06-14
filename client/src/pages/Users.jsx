@@ -68,8 +68,8 @@ const Users = () => {
                       <div className="userProfileImage">
                         {user.profileImage !== "" ? (
                           <img
-                            src={`https://ilikemia.com/api/${user.profileImage}`}
-                            // src={`${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`}
+                            // src={`https://ilikemia.com/api/${user.profileImage}`}
+                            src={`${process.env.REACT_APP_API_BASE_URL}api/${user.profileImage}`}
                             alt={user.name}
                           />
                         ) : (

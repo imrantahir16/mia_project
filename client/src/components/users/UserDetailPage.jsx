@@ -37,19 +37,6 @@ const UserDetailPage = () => {
       Authorization: `Bearer ${user.accessToken}`,
     },
   };
-  // const originalDate = new Date(report?.time);
-  // const formattedDate = originalDate.toLocaleDateString([], {
-  //   month: "2-digit",
-  //   day: "2-digit",
-  //   year: "numeric",
-  // });
-
-  // const formattedTime = originalDate.toLocaleTimeString([], {
-  //   hour: "2-digit",
-  //   minute: "2-digit",
-  // });
-
-  // const finalFormattedDate = `${formattedDate} ${formattedTime}`;
   useEffect(() => {
     const fetchUser = async () => {
       const response = await axios.get(`api/users/${params.id}`, config);
@@ -141,8 +128,8 @@ const UserDetailPage = () => {
                 selectedUser?.profileImage !== "" ? (
                   <img
                     className="userProfile"
-                    src={`https://ilikemia.com/api/${selectedUser?.profileImage}`}
-                    // src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
+                    // src={`https://ilikemia.com/api/${selectedUser?.profileImage}`}
+                    src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
                     alt={`${selectedUser.name}'s profile`}
                   />
                 ) : (
@@ -289,8 +276,8 @@ const UserDetailPage = () => {
                 selectedUser?.drivingLicense !== "" ? (
                   <img
                     className="userDataImage mt-3"
-                    src={`https://ilikemia.com/api/${selectedUser?.drivingLicense}`}
-                    // src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
+                    // src={`https://ilikemia.com/api/${selectedUser?.drivingLicense}`}
+                    src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
                     alt={`${selectedUser.name}'s driving license`}
                   />
                 ) : (
@@ -306,8 +293,8 @@ const UserDetailPage = () => {
                 {selectedUser?.insurance && selectedUser?.insurance !== "" ? (
                   <img
                     className="userDataImage mt-3"
-                    src={`https://ilikemia.com/api/${selectedUser?.insurance}`}
-                    // src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
+                    // src={`https://ilikemia.com/api/${selectedUser?.insurance}`}
+                    src={`${process.env.REACT_APP_API_BASE_URL}/api/${selectedUser?.profileImage}`}
                     alt={`${selectedUser.name}'s insurance`}
                   />
                 ) : (

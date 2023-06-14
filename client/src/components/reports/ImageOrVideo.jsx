@@ -16,11 +16,16 @@ const ImageOrVideo = ({ data }) => {
         <video
           controls
           className="imageVideo"
-          src={`https://ilikemia.com/api/${data}`}
+          src={`${process.env.REACT_APP_API_BASE_URL}api/${data}`}
+          // src={`https://ilikemia.com/api/${data}`}
         />
       )}
       {image && (
-        <img className="imageVideo" src={`https://ilikemia.com/api/${data}`} />
+        <img
+          className="imageVideo"
+          src={`${process.env.REACT_APP_API_BASE_URL}api/${data}`}
+          // src={`https://ilikemia.com/api/${data}`}
+        />
       )}
     </>
   );
