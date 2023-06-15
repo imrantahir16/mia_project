@@ -7,6 +7,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  deletingId: null,
 };
 
 // create tows
@@ -53,7 +54,7 @@ export const deleteUser = createAsyncThunk(
   async (userId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.accessToken;
-      return await userService.deleteTow(userId, token);
+      return await userService.deleteUser(userId, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -71,6 +72,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => initialState,
+    setDeletingId: (state, action) => {
+      state.deletingId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -105,5 +109,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { reset } = userSlice.actions;
+export const { reset, setDeletingId } = userSlice.actions;
 export default userSlice.reducer;

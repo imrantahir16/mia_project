@@ -3,15 +3,19 @@ import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "../../features/users/userSlice";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const DeleteUserModal = ({ onShow, onClose }) => {
   const { deletingId } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const deleteHandler = () => {
-    dispatch(deleteUser(deletingId));
+    dispatch(deleteUser(deletingId)).then((res) => {
+      console.log(res);
+      toast.success("User deleted");
+    });
     console.log(deletingId);
     onClose();
-    toast.success("User deleted");
-    window.location.reload(true);
+    navigate("/users");
   };
   return (
     <Modal show={onShow} onHide={onClose} centered>

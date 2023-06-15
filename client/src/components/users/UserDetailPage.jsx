@@ -11,7 +11,7 @@ import { HiOutlineTrash } from "react-icons/hi";
 import { FiEdit } from "react-icons/fi";
 import { BiSave } from "react-icons/bi";
 import DeleteUserModal from "./DeleteUserModal";
-import { setDeletingId } from "../../features/reports/reportSlice";
+import { setDeletingId } from "../../features/users/userSlice";
 import InputGroup from "react-bootstrap/InputGroup";
 import { toast } from "react-toastify";
 
