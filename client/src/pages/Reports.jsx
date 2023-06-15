@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllReports, reset } from "../features/reports/reportSlice";
 import Spinner from "../components/common/Spinner";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Reports = () => {
   const { reports, isError, isLoading, message } = useSelector(
     (state) => state.report
@@ -16,6 +17,7 @@ const Reports = () => {
   useEffect(() => {
     if (isError) {
       console.log(message);
+      toast.error(message);
     }
 
     if (!user) {

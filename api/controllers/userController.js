@@ -112,6 +112,9 @@ const updateProfile = async (req, res) => {
   const userId = req.params?.id ? req.params.id : req.userId;
   const { name, phone, policeId, adminCode } = req.body;
   // console.log(req.files);
+  if (!ObjectId.isValid(userId))
+    return res.status(400).json({ message: "Invalid user id" });
+
   const foundUser = await User.findOne({ _id: userId }).exec();
   if (!foundUser)
     return res.status(404).json({ message: `User does not exist` });

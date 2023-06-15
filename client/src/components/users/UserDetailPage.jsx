@@ -13,8 +13,7 @@ import { BiSave } from "react-icons/bi";
 import DeleteUserModal from "./DeleteUserModal";
 import { setDeletingId } from "../../features/reports/reportSlice";
 import InputGroup from "react-bootstrap/InputGroup";
-// import noProfileImage from "../../assets/noprofile.webp";
-// import noImage from "../../assets/noImage.jpg";
+import { toast } from "react-toastify";
 
 const UserDetailPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -39,21 +38,30 @@ const UserDetailPage = () => {
   };
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await axios.get(`api/users/${params.id}`, config);
-      setSelectedUser(response.data);
-      setUserType(response?.data?.roles?.Admin ? "admin" : "user");
+      try {
+        const response = await axios.get(`api/users/${params.id}`, config);
+        // console.log(response);
+        setSelectedUser(response.data);
+        setUserType(response?.data?.roles?.Admin ? "admin" : "user");
+      } catch (error) {
+        if (error.response.status === 400) {
+          toast.error(error.response.data.message);
+        }
+      }
     };
     fetchUser();
   }, []);
 
   useEffect(() => {
     const fetchPlan = async () => {
-      const response = await axios.get(`api/plans/${params.id}`, config);
+      const response = await axios.get(`api/plans/${selectedUser._id}`, config);
       setSelectedUserPlan(response.data);
       // console.log(response.data);
     };
-    fetchPlan();
-  }, []);
+    if (selectedUser._id) {
+      fetchPlan();
+    }
+  }, [selectedUser._id]);
 
   const updateHandler = async () => {
     let userData;
@@ -71,12 +79,21 @@ const UserDetailPage = () => {
       };
     }
 
-    const response = await axios.put(
-      `api/users/${params.id}`,
-      userData,
-      config
-    );
-    // console.log(userType);
+    try {
+      const response = await axios.put(
+        `api/users/${params.id}`,
+        userData,
+        config
+      );
+      console.log(response);
+      if (response.status === 200) {
+        toast.success("User updated");
+      }
+    } catch (error) {
+      if (error.response.status !== 200) {
+        toast.error(error.response.data.message);
+      }
+    }
   };
 
   return (

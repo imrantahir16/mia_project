@@ -7,12 +7,14 @@ import Container from "react-bootstrap/Container";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "../../api/axios";
+import { toast } from "react-toastify";
 
 const EditEmergencyModal = ({ onShow, onClose }) => {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const { editingId, emergencies } = useSelector((state) => state.emergency);
   const { user } = useSelector((state) => state.auth);
+  const [isError, setIsError] = useState(false);
 
   const editHandler = async () => {
     const emergencyData = { name, contact };
@@ -21,13 +23,23 @@ const EditEmergencyModal = ({ onShow, onClose }) => {
         Authorization: `Bearer ${user.accessToken}`,
       },
     };
-    const response = await axios.put(
-      `api/emergency/${editingId}`,
-      emergencyData,
-      config
-    );
+    try {
+      const response = await axios.put(
+        `api/emergency/${editingId}`,
+        emergencyData,
+        config
+      );
+      console.log(response);
+      if (response.status === 200) {
+        window.location.reload(true);
+        toast.success("Contact updated");
+      }
+    } catch (error) {
+      if (error.response.status !== 200) {
+        toast.error(error.response.data.message);
+      }
+    }
     onClose();
-    window.location.reload(true);
   };
   useEffect(() => {
     const { name, contact } = emergencies.filter(
@@ -36,6 +48,14 @@ const EditEmergencyModal = ({ onShow, onClose }) => {
     setName(name);
     setContact(contact);
   }, []);
+
+  useEffect(() => {
+    if (!name || !contact) {
+      setIsError(true);
+    } else {
+      setIsError(false);
+    }
+  }, [name, contact]);
 
   return (
     <Modal show={onShow} onHide={onClose} centered>
@@ -76,7 +96,7 @@ const EditEmergencyModal = ({ onShow, onClose }) => {
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={editHandler}>
+        <Button variant="primary" onClick={editHandler} disabled={isError}>
           Save Changes
         </Button>
       </Modal.Footer>

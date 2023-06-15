@@ -2,6 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "../../features/users/userSlice";
+import { toast } from "react-toastify";
 const DeleteUserModal = ({ onShow, onClose }) => {
   const { deletingId } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -9,6 +10,7 @@ const DeleteUserModal = ({ onShow, onClose }) => {
     dispatch(deleteUser(deletingId));
     console.log(deletingId);
     onClose();
+    toast.success("User deleted");
     window.location.reload(true);
   };
   return (

@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteReport } from "../../features/reports/reportSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const DeleteReportModal = ({ onShow, onClose }) => {
   const { deletingId } = useSelector((state) => state.report);
@@ -14,6 +15,7 @@ const DeleteReportModal = ({ onShow, onClose }) => {
     console.log(deletingId);
     navigate("/reports");
     onClose();
+    toast.success("Report deleted");
     window.location.reload(true);
   };
 

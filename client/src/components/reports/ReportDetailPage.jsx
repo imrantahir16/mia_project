@@ -14,6 +14,7 @@ import DeleteReportModal from "./DeleteReportModal";
 import { setDeletingId } from "../../features/reports/reportSlice";
 import ImageOrVideo from "./ImageOrVideo";
 import InputGroup from "react-bootstrap/InputGroup";
+import { toast } from "react-toastify";
 
 const ReportDetailPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -21,7 +22,6 @@ const ReportDetailPage = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const [report, setReport] = useState({});
-  const [username, setUsername] = useState("");
   const { user } = useSelector((state) => state.auth);
 
   const deleteModalCloseHandler = () => setIsDeleteModalOpen(false);
@@ -50,33 +50,44 @@ const ReportDetailPage = () => {
   const finalFormattedDate = `${formattedDate} ${formattedTime}`;
   useEffect(() => {
     const fetchReport = async () => {
-      const report = await axios.get(`api/report/${params.id}`, config);
-      setReport(report.data);
-      setUsername(report.data.username);
-
-      console.log("report", report.data);
-      // console.log(username);
+      try {
+        const report = await axios.get(`api/report/${params.id}`, config);
+        setReport(report.data);
+      } catch (error) {
+        if (error.response.status !== 200) {
+          toast.error(error.response.data.message);
+        }
+      }
     };
     fetchReport();
   }, []);
 
   const updateHandler = async () => {
     setIsEditEnabled(false);
-    console.log(report);
+    // console.log(report);
     const { location, weather, speed, traffic } = report;
     const { description, lat, lng } = location;
-    const response = await axios.put(
-      `api/report/${params.id}`,
-      {
-        ["location.description"]: description,
-        ["location.lat"]: lat,
-        ["location.lng"]: lng,
-        weather,
-        speed,
-        traffic,
-      },
-      config
-    );
+    try {
+      const response = await axios.put(
+        `api/report/${params.id}`,
+        {
+          ["location.description"]: description,
+          ["location.lat"]: lat,
+          ["location.lng"]: lng,
+          weather,
+          speed,
+          traffic,
+        },
+        config
+      );
+      if (response.status === 200) {
+        toast.success("Report updated");
+      }
+    } catch (error) {
+      if (error.response.status !== 200) {
+        toast.error(error.response.data.message);
+      }
+    }
   };
 
   return (

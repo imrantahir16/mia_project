@@ -20,6 +20,7 @@ import {
   setDeletingId,
   reset,
 } from "../features/mechanics/mechanicSlice";
+import { toast } from "react-toastify";
 
 const Mechanics = () => {
   const [mechanicName, setMechanicName] = useState("");
@@ -49,9 +50,9 @@ const Mechanics = () => {
   };
 
   useEffect(() => {
-    if (isError) {
-      console.log(message);
-    }
+    // if (isError) {
+    //   console.log(message);
+    // }
 
     if (!user) {
       navigate("/login");
@@ -68,15 +69,30 @@ const Mechanics = () => {
   const createContactHandler = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    dispatch(createMechanic({ name: mechanicName, contact: mechanicContact }));
+    dispatch(
+      createMechanic({ name: mechanicName, contact: mechanicContact })
+    ).then((res) => {
+      // console.log(res);
+      if (res.meta.requestStatus === "fulfilled") {
+        toast.success("Contact Added");
+      }
+      if (
+        res.meta.requestStatus === "rejected" &&
+        res.payload === "Request failed with status code 400"
+      ) {
+        toast.error("Incorrect data");
+      }
+      if (
+        res.meta.requestStatus === "rejected" &&
+        res.payload === "Mechanic contact already exists"
+      ) {
+        toast.error("Contact Already exist");
+      }
+    });
     setIsSubmitting(false);
     setMechanicName("");
     setMechanicContact("");
   };
-
-  if (isError) {
-    console.log(message);
-  }
 
   if (isLoading) {
     return <Spinner />;

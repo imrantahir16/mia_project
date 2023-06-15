@@ -2,6 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteMechanic } from "../../features/mechanics/mechanicSlice";
+import { toast } from "react-toastify";
 const DeleteTowModal = ({ onShow, onClose }) => {
   const { deletingId } = useSelector((state) => state.mechanic);
   const dispatch = useDispatch();
@@ -10,6 +11,7 @@ const DeleteTowModal = ({ onShow, onClose }) => {
     // console.log(deletingId);
     onClose();
     window.location.reload(true);
+    toast.success("Contact deleted");
   };
   return (
     <Modal show={onShow} onHide={onClose} centered>

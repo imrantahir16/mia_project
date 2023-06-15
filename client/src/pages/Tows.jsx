@@ -20,6 +20,7 @@ import {
 } from "../features/tows/towSlice";
 import DeleteTowModal from "../components/tows/DeleteTowModal";
 import EditTowModal from "../components/tows/EditTowModal";
+import { toast } from "react-toastify";
 
 const Tows = () => {
   const [towName, setTowName] = useState("");
@@ -30,8 +31,6 @@ const Tows = () => {
   const { tows, isError, isLoading, message } = useSelector(
     (state) => state.tow
   );
-
-  // const
 
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -51,9 +50,9 @@ const Tows = () => {
   };
 
   useEffect(() => {
-    if (isError) {
-      console.log(message);
-    }
+    // if (isError) {
+    //   console.log(message);
+    // }
     if (!user) {
       navigate("/login");
     }
@@ -70,16 +69,28 @@ const Tows = () => {
   const createContactHandler = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    dispatch(createTow({ name: towName, contact: towContact }));
+    dispatch(createTow({ name: towName, contact: towContact })).then((res) => {
+      // console.log(res);
+      if (res.meta.requestStatus === "fulfilled") {
+        toast.success("Contact Added");
+      }
+      if (
+        res.meta.requestStatus === "rejected" &&
+        res.payload === "Request failed with status code 400"
+      ) {
+        toast.error("Incorrect data");
+      }
+      if (
+        res.meta.requestStatus === "rejected" &&
+        res.payload === "Tow contact already exists"
+      ) {
+        toast.error("Contact Already exist");
+      }
+    });
     setIsSubmitting(false);
     setTowName("");
     setTowContact("");
   };
-
-  // toast will go here
-  if (isError) {
-    console.log(message);
-  }
 
   if (isLoading) {
     return <Spinner />;

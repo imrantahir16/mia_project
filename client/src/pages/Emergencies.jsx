@@ -20,6 +20,7 @@ import {
   reset,
 } from "../features/emergencies/emergencySlice";
 import Spinner from "../components/common/Spinner";
+import { toast } from "react-toastify";
 
 const Emergencies = () => {
   const [emergencyName, setEmergencyName] = useState("");
@@ -50,9 +51,10 @@ const Emergencies = () => {
   };
 
   useEffect(() => {
-    if (isError) {
-      console.log(message);
-    }
+    // if (isError) {
+    //   console.log(message);
+    //   toast.error(message);
+    // }
 
     if (!user) {
       navigate("/login");
@@ -72,15 +74,32 @@ const Emergencies = () => {
     setIsSubmitting(true);
     dispatch(
       createEmergency({ name: emergencyName, contact: emergencyContact })
-    );
+    ).then((res) => {
+      // console.log(res);
+      if (res.meta.requestStatus === "fulfilled") {
+        toast.success("Contact Added");
+      }
+      if (
+        res.meta.requestStatus === "rejected" &&
+        res.payload === "Request failed with status code 400"
+      ) {
+        toast.error("Incorrect data");
+      }
+      if (
+        res.meta.requestStatus === "rejected" &&
+        res.payload === "Emergency contact already exists"
+      ) {
+        toast.error("Contact Already exist");
+      }
+    });
     setIsSubmitting(false);
     setEmergencyName("");
     setEmergencyContact("");
   };
 
-  if (isError) {
-    console.log(message);
-  }
+  // if (isError) {
+  //   console.log(message);
+  // }
 
   if (isLoading) {
     return <Spinner />;

@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { login, reset } from "../features/auth/authSlice";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import axios, { axiosPrivate } from "../api/axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ const Login = () => {
   useEffect(() => {
     if (isError) {
       console.log(message);
+      toast.error(message);
     }
 
     if (isSuccess || user) {
@@ -121,6 +123,7 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="password"
                   name="password"
+                  minLength={6}
                   value={password}
                   required
                   onChange={(e) => onChangeHandler(e)}

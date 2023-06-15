@@ -39,6 +39,7 @@ export const getEmergencies = createAsyncThunk(
       const token = thunkAPI.getState().auth.user.accessToken;
       return await emergencyService.getEmergencies(token);
     } catch (error) {
+      console.log(error);
       const message =
         (error.response &&
           error.response.data &&

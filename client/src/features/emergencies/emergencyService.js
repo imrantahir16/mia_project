@@ -11,6 +11,7 @@ const createEmergency = async (emergencyData, token) => {
   };
 
   const response = await axios.post(API_URL, emergencyData, config);
+  console.log(response);
 
   return response.data;
 };

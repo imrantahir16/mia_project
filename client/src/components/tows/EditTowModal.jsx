@@ -7,12 +7,14 @@ import Container from "react-bootstrap/Container";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "../../api/axios";
+import { toast } from "react-toastify";
 
 const EditTowModal = ({ onShow, onClose }) => {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const { editingId, tows } = useSelector((state) => state.tow);
   const { user } = useSelector((state) => state.auth);
+  const [isError, setIsError] = useState(false);
 
   const editHandler = async () => {
     const towData = { name, contact };
@@ -22,14 +24,25 @@ const EditTowModal = ({ onShow, onClose }) => {
       },
     };
     const response = await axios.put(`api/tows/${editingId}`, towData, config);
+    if (response.status === 200) {
+      toast.success("Contact Updated");
+      window.location.reload(true);
+    }
     onClose();
-    window.location.reload(true);
   };
   useEffect(() => {
     const { name, contact } = tows.filter((tow) => tow._id === editingId)[0];
     setName(name);
     setContact(contact);
   }, []);
+
+  useEffect(() => {
+    if (!name || !contact) {
+      setIsError(true);
+    } else {
+      setIsError(false);
+    }
+  }, [name, contact]);
 
   return (
     <Modal show={onShow} onHide={onClose} centered>
@@ -70,7 +83,7 @@ const EditTowModal = ({ onShow, onClose }) => {
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={editHandler}>
+        <Button variant="primary" onClick={editHandler} disabled={isError}>
           Save Changes
         </Button>
       </Modal.Footer>

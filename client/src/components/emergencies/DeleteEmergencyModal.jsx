@@ -2,6 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteEmergency } from "../../features/emergencies/emergencySlice";
+import { toast } from "react-toastify";
 
 const DeleteEmergencyModal = ({ onShow, onClose }) => {
   const { deletingId } = useSelector((state) => state.emergency);
@@ -12,6 +13,7 @@ const DeleteEmergencyModal = ({ onShow, onClose }) => {
     console.log(deletingId);
     onClose();
     window.location.reload(true);
+    toast.success("Contact deleted");
   };
 
   return (
