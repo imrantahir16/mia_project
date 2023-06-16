@@ -10,10 +10,10 @@ const DeleteUserModal = ({ onShow, onClose }) => {
   const navigate = useNavigate();
   const deleteHandler = () => {
     dispatch(deleteUser(deletingId)).then((res) => {
-      console.log(res);
+      // console.log(res);
       toast.success("User deleted");
     });
-    console.log(deletingId);
+    // console.log(deletingId);
     onClose();
     navigate("/users");
   };

@@ -19,7 +19,7 @@ const Subscription = () => {
       { priceId },
       config
     );
-    console.log(res.url);
+    // console.log(res.url);
     window.location.href = res.url;
   };
 

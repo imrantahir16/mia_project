@@ -10,7 +10,7 @@ const DeleteEmergencyModal = ({ onShow, onClose }) => {
 
   const deleteHandler = () => {
     dispatch(deleteEmergency(deletingId));
-    console.log(deletingId);
+    // console.log(deletingId);
     onClose();
     window.location.reload(true);
     toast.success("Contact deleted");

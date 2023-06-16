@@ -20,7 +20,7 @@ const Plans = () => {
       {},
       config
     );
-    console.log(res.data);
+    // console.log(res.data);
 
     window.location.href = res.url;
   };
@@ -28,7 +28,7 @@ const Plans = () => {
   const fetchPlan = async () => {
     const { data: res } = await axios.get("api/plans", config);
     setPlan(res);
-    console.log(res);
+    // console.log(res);
     setIsLoading(false);
   };
 

@@ -29,7 +29,7 @@ const EditMechanicModal = ({ onShow, onClose }) => {
         mechanicData,
         config
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         window.location.reload(true);
         toast.success("Contact updated");

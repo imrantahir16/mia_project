@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { login, reset } from "../features/auth/authSlice";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import axios, { axiosPrivate } from "../api/axios";
+// import axios from "../api/axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
@@ -23,18 +23,20 @@ const Login = () => {
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user, isLoading, isSuccess, isError, message } = useSelector(
-    (state) => state.auth
-  );
+  const { user, isLoading, isLoggedIn, isSuccess, isError, message } =
+    useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isError) {
-      console.log(message);
+      // console.log(message);
       toast.error(message);
     }
 
-    if (isSuccess || user) {
+    if (isSuccess || (user && isLoggedIn)) {
       navigate("/");
+    }
+    if (isSuccess || (user && user.user.isVerified !== true)) {
+      navigate("/verify-account");
     }
 
     dispatch(reset());
@@ -67,10 +69,10 @@ const Login = () => {
     setValidated(true);
   };
 
-  const googleLoginHandler = async (e) => {
-    const res = await axios.get("api/auth/google");
-    console.log(res);
-  };
+  // const googleLoginHandler = async (e) => {
+  //   const res = await axios.get("api/auth/google");
+  //   console.log(res);
+  // };
   return (
     <section>
       <Container
@@ -158,14 +160,14 @@ const Login = () => {
                   <p>
                     Not a member? <a href="/register">Register</a>
                   </p>
-                  <p>or sign in with:</p>
+                  {/* <p>or sign in with:</p>
                   <Button
                     className="btn btn-secondary"
                     onClick={googleLoginHandler}
                   >
                     <FcGoogle className="me-2" />
                     <span>Login with Google</span>
-                  </Button>
+                  </Button> */}
                 </div>
               </Col>
             </Form.Group>

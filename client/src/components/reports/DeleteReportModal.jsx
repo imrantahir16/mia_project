@@ -12,7 +12,7 @@ const DeleteReportModal = ({ onShow, onClose }) => {
 
   const deleteHandler = () => {
     dispatch(deleteReport(deletingId));
-    console.log(deletingId);
+    // console.log(deletingId);
     navigate("/reports");
     onClose();
     toast.success("Report deleted");

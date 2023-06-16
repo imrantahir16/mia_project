@@ -48,7 +48,7 @@ const updateTow = async (towId, towData, token) => {
   };
 
   const response = await axios.put(API_URL + towId, towData, config);
-  console.log(response);
+  // console.log(response);
   return response.data;
 };
 

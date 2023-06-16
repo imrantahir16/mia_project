@@ -45,7 +45,7 @@ const Tows = () => {
   const deleteModalCloseHandler = () => setIsDeleteModalOpen(false);
   const deleteModalShowHandler = (id) => {
     dispatch(setDeletingId(id));
-    console.log(id);
+    // console.log(id);
     setIsDeleteModalOpen(true);
   };
 

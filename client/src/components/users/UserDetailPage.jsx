@@ -66,7 +66,7 @@ const UserDetailPage = () => {
   const updateHandler = async () => {
     let userData;
     setIsEditEnabled(false);
-    console.log(selectedUser);
+    // console.log(selectedUser);
     const { policeId } = selectedUser;
     if (userType === "admin") {
       userData = {
@@ -85,7 +85,7 @@ const UserDetailPage = () => {
         userData,
         config
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         toast.success("User updated");
       }

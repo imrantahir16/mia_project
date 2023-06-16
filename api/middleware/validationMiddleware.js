@@ -8,6 +8,7 @@ const validateRegisterData = [
     .isEmail()
     .withMessage("Email is not valid"),
   body("phone")
+    .optional()
     .matches(/^(\+?\d{1,3}[- ]?)?\d{10}$/)
     .withMessage("Phone number is not valid"),
   body("password")

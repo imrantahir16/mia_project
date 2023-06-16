@@ -5,55 +5,70 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { useState } from "react";
-import axios from "../api/axios";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  reset,
+  resetAfterVerify,
+  verifyAccount,
+} from "../features/auth/authSlice";
 
-const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
+const ResetPassword = () => {
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
   const [validated, setValidated] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const { user, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.auth
+  );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const onChangeHandler = (e) => {
-    if (e.target.name === "email") {
-      setEmail(e.target.value);
+    if (e.target.name === "otp") {
+      setOtp(e.target.value);
     }
   };
-  const forgotPasswordHandler = async (e) => {
+  const verifyAccountHandler = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    // setLoading(true);
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
-      if (!email) {
-        setEmailError("Email is required");
+      if (!otp) {
+        setOtpError("OTP is required");
+      }
+      if (otp.length < 5) {
+        setOtpError("OTP is invalid");
       }
     } else {
-      try {
-        const response = await axios.post("api/reset-password/sendotp", {
-          email,
-        });
-        // console.log(response);
-        toast.success(response.data.message);
-        navigate("/resetPassword");
-      } catch (error) {
-        // console.log(error);
-        if (error.response.status === 404) {
-          toast.error("Invalid Email");
-        } else if (error.response.status === 400) {
-          toast.error("You account is not verified!");
-        } else {
-          toast.error("Server error");
-        }
-      }
+      dispatch(verifyAccount({ otp }));
     }
+    // setLoading(false);
     setValidated(true);
-    setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (isError) {
+      // console.log(message);
+      toast.error(message);
+    }
+
+    if (isSuccess || (user && user.user.isVerified === true)) {
+      toast.success(user.message);
+      // dispatch(reset());
+      navigate("/login");
+    }
+
+    if (isSuccess || (user && user.user.isVerified !== true)) {
+      navigate("/verify-account");
+    }
+
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
+
   return (
     <section>
       <Container
@@ -65,34 +80,36 @@ const ForgotPassword = () => {
             noValidate
             validated={validated}
             className="mw-100"
-            onSubmit={forgotPasswordHandler}
+            onSubmit={verifyAccountHandler}
           >
             <div className="d-flex align-item-center justify-content-center py-3">
-              <h1 className="text-primary">Forgot Password</h1>
+              <h1 className="text-primary">Verify Account</h1>
             </div>
             <Col sm={12}>
               <FloatingLabel
-                controlId="floatingInput"
-                label="Email"
+                controlId="floatingInputOtp"
+                label="OTP"
                 className="mb-1"
               >
                 <Form.Control
                   required
-                  name="email"
-                  value={email}
+                  name="otp"
+                  value={otp}
+                  minLength={5}
                   onChange={(e) => onChangeHandler(e)}
-                  type="email"
-                  placeholder="Email"
+                  type="text"
+                  placeholder="OTP"
                 />
                 <Form.Control.Feedback className={"ms-3"} type="invalid">
-                  {emailError}
+                  {otpError}
                 </Form.Control.Feedback>
               </FloatingLabel>
             </Col>
+
             <Form.Group as={Row} className="my-4 text-center">
               <Col>
                 <Button type="submit" disabled={isLoading}>{`${
-                  isLoading ? "Submitting" : "Submit"
+                  isLoading ? "Verifing" : "Verify"
                 }`}</Button>
               </Col>
             </Form.Group>
@@ -102,4 +119,4 @@ const ForgotPassword = () => {
     </section>
   );
 };
-export default ForgotPassword;
+export default ResetPassword;

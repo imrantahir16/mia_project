@@ -7,6 +7,7 @@ const userLS = JSON.parse(localStorage.getItem("user"));
 
 const initialState = {
   user: userLS ? userLS : null,
+  isLoggedIn: false,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -18,7 +19,9 @@ export const register = createAsyncThunk(
   "auth/register",
   async (user, thunkAPI) => {
     try {
-      return await authService.register(user);
+      const res = await authService.register(user);
+      // console.log(res);
+      return res;
     } catch (error) {
       const message =
         (error.response &&
@@ -31,15 +34,36 @@ export const register = createAsyncThunk(
   }
 );
 
+export const verifyAccount = createAsyncThunk(
+  "auth/verify",
+  async (otpData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.accessToken;
+      const res = await authService.verifyAccount(otpData, token);
+      // console.log(res);
+      return res;
+    } catch (error) {
+      // console.log("thunk", error);
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.response.data.errors[0].msg;
+      // error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Login user
 export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   try {
     const res = await authService.login(user);
-    console.log(res);
+    // console.log(res);
     if (!res) return thunkAPI.rejectWithValue("Unauthorized User");
     return res;
   } catch (error) {
-    console.log("thunk", error);
+    // console.log("thunk", error);
     const message =
       (error.response && error.response.data && error.response.data.message) ||
       error.response.data.errors[0].msg;
@@ -62,6 +86,15 @@ export const authSlice = createSlice({
       state.isError = false;
       state.message = "";
     },
+
+    resetAfterVerify: (state) => {
+      localStorage.removeItem("user");
+      state.user = null;
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.isError = false;
+      state.message = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -79,17 +112,33 @@ export const authSlice = createSlice({
         state.message = action.payload;
         state.user = null;
       })
+      .addCase(verifyAccount.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(verifyAccount.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(verifyAccount.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.user = null;
+      })
       .addCase(login.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.isLoggedIn = true;
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.isLoggedIn = false;
         state.message = action.payload;
         state.user = null;
       })
@@ -108,5 +157,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset } = authSlice.actions;
+export const { reset, resetAfterVerify } = authSlice.actions;
 export default authSlice.reducer;

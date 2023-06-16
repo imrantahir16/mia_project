@@ -8,7 +8,7 @@ const DeleteTowModal = ({ onShow, onClose }) => {
   const dispatch = useDispatch();
   const deleteHandler = () => {
     dispatch(deleteTow(deletingId));
-    console.log(deletingId);
+    // console.log(deletingId);
     onClose();
     window.location.reload(true);
     toast.success("Contact deleted");

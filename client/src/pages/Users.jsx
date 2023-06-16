@@ -14,7 +14,7 @@ const Users = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (isError) {
-      console.log(message);
+      // console.log(message);
       toast.error(message);
     }
 
@@ -32,7 +32,8 @@ const Users = () => {
   }, [user, dispatch, message, isError, navigate]);
 
   if (isError) {
-    console.log(message);
+    // console.log(message);
+    toast.error(message);
   }
 
   if (isLoading) {

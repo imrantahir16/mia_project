@@ -9,15 +9,17 @@ import Emergencies from "./pages/Emergencies";
 import Users from "./pages/Users";
 import Reports from "./pages/Reports";
 // import Subscription from "./pages/Subscription";
-import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 // import Plans from "./pages/Plans";
 import PrivacyPolicies from "./pages/PrivacyPolicies";
 import RequireAuth from "./components/RequiredAuth";
-import ReportDetailPage from "./components/reports/ReportDetailPage";
 import UserDetailPage from "./components/users/UserDetailPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReportDetailPage from "./components/reports/ReportDetailPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyAccount from "./pages/VerifyAccount";
 function App() {
   return (
     <>
@@ -25,9 +27,10 @@ function App() {
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-account" element={<VerifyAccount />} />
+        <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/privacypolicy" element={<PrivacyPolicies />} />
-        {/* <Route path="unauthorized" element={<Unauthorized />} /> */}
 
         {/* protected Routes */}
         <Route element={<ProtectedRoute />}>

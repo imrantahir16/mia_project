@@ -48,7 +48,7 @@ const updateMechanic = async (mechanicId, mechanicData, token) => {
   };
 
   const response = await axios.put(API_URL + mechanicId, mechanicData, config);
-  console.log(response);
+  // console.log(response);
   return response.data;
 };
 
