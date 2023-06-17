@@ -18,7 +18,7 @@ const Register = () => {
   const [nameError, setNameError] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [policeId, setPoliceId] = useState("");
+  const [policyId, setPolicyId] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -45,8 +45,8 @@ const Register = () => {
     if (e.target.name === "phone") {
       setPhone(e.target.value);
     }
-    if (e.target.name === "policeId") {
-      setPoliceId(e.target.value);
+    if (e.target.name === "policyId") {
+      setPolicyId(e.target.value);
     }
     if (e.target.name === "password") {
       setPassword(e.target.value);
@@ -81,7 +81,7 @@ const Register = () => {
         password,
         confirmPassword,
         phone,
-        policeId,
+        policyId,
       };
       dispatch(register(userData));
     }
@@ -232,16 +232,16 @@ const Register = () => {
           </Col>
           <Col sm={12}>
             <FloatingLabel
-              controlId="floatingInputPoliceid"
-              label="Police ID"
+              controlId="floatingInputPolicyid"
+              label="Policy ID"
               className="mb-1"
             >
               <Form.Control
                 type="text"
-                name="policeId"
-                value={policeId}
+                name="policyId"
+                value={policyId}
                 onChange={(e) => onChangeHandler(e)}
-                placeholder="Police Id"
+                placeholder="Policy Id"
               />
             </FloatingLabel>
           </Col>
