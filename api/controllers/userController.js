@@ -46,18 +46,58 @@ const getUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  if (!req.params.id)
-    return res.status(400).json({ message: "User Id is required" });
+  let userId;
+  if (
+    req.roles.length > 1 &&
+    req.roles[1] === ROLES_LIST.Admin &&
+    !req.params.id
+  ) {
+    userId = req.userId;
+  } else if (
+    req.roles.length > 1 &&
+    req.roles[1] === ROLES_LIST.Admin &&
+    req.params.id
+  ) {
+    userId = req.params.id;
+  } else {
+    userId = req.userId;
+  }
+  if (!userId) return res.status(400).json({ message: "User Id is required" });
 
-  if (!ObjectId.isValid(req.params.id))
+  if (!ObjectId.isValid(userId))
     return res.status(400).json({ message: "Invalid user id" });
 
-  const user = await User.findOne({ _id: req.params.id }).exec();
+  const user = await User.findOne({ _id: userId }).exec();
   if (!user)
-    return res
-      .status(404)
-      .json({ message: `User ID ${req.params.id} not found` });
-  await User.deleteOne({ _id: req.params.id });
+    return res.status(404).json({ message: `User ID ${userId} not found` });
+
+  if (user.profileImage !== "") {
+    const filePath = user.profileImage;
+    fs.unlink(filePath, async (error) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error });
+      }
+    });
+  }
+  if (user.drivingLicense !== "") {
+    const filePath = `${user.drivingLicense}`;
+    fs.unlink(filePath, async (error) => {
+      if (error) {
+        return res.status(500).json({ error });
+      }
+    });
+  }
+  if (user.insurance !== "") {
+    const filePath = `${user.insurance}`;
+    fs.unlink(filePath, async (error) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error });
+      }
+    });
+  }
+  await User.deleteOne({ _id: userId });
   res.status(200).json({ message: "User account deleted" });
 };
 
@@ -110,7 +150,7 @@ const changePassword = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const userId = req.params?.id ? req.params.id : req.userId;
-  const { name, phone, policeId, adminCode } = req.body;
+  const { name, phone, policyId, adminCode } = req.body;
   // console.log(req.files);
   if (!ObjectId.isValid(userId))
     return res.status(400).json({ message: "Invalid user id" });
@@ -124,7 +164,7 @@ const updateProfile = async (req, res) => {
   }
   if (name) foundUser.name = name;
   if (phone) foundUser.phone = phone;
-  if (policeId) foundUser.policeId = policeId;
+  if (policyId) foundUser.policyId = policyId;
   if (req?.files?.profileImage) {
     if (foundUser.profileImage !== "") {
       const filePath = foundUser.profileImage;

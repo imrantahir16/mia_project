@@ -29,18 +29,29 @@ const Login = () => {
   useEffect(() => {
     if (isError) {
       // console.log(message);
+
       toast.error(message);
+      if (
+        message === "Pending Account Verification. OTP is sent to your email!"
+      ) {
+        navigate("/verify-account");
+      }
     }
 
     if (isSuccess || (user && isLoggedIn)) {
       navigate("/");
     }
+
     if (isSuccess || (user && user.user.isVerified !== true)) {
       navigate("/verify-account");
     }
 
+    if (!user && !isError) {
+      navigate("/login");
+    }
+
     dispatch(reset());
-  }, [user, isError, isSuccess, message, navigate, dispatch]);
+  }, [user, isError, isSuccess, message, navigate, dispatch, isLoggedIn]);
 
   const onChangeHandler = (e) => {
     if (e.target.name === "email") {

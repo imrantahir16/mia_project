@@ -10,6 +10,7 @@ const generateReport = async (req, res) => {
   const newReport = {
     userId: req.userId,
     username: user?.name,
+    policyId: user?.policyId,
     location: {
       description: req.body["location.description"],
       lat: req.body["location.lat"],

@@ -1,6 +1,6 @@
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllReports, reset } from "../features/reports/reportSlice";
 import Spinner from "../components/common/Spinner";
@@ -55,6 +55,9 @@ const Reports = () => {
             <thead>
               <tr>
                 <th scope="col">User</th>
+                <th scope="col" className="nowrap">
+                  Policy ID
+                </th>
                 <th scope="col">Location</th>
                 <th scope="col">Weather</th>
                 <th scope="col">Time</th>
@@ -74,34 +77,14 @@ const Reports = () => {
                     <td className="nowrap">
                       {report?.username ? report.username : "No Name"}
                     </td>
+                    <td className="nowrap">
+                      {report?.policyId ? report?.policyId : ""}
+                    </td>
                     <td>{report?.location?.description}</td>
                     <td>{report?.weather}</td>
                     <td>{report?.time}</td>
                     <td>{report?.speed}</td>
                     <td>{report?.traffic}</td>
-                    {/* <td>{report?.traffic}</td> */}
-                    {/* <td>
-                      <div className="d-flex align-items-center gap-2 justify-content-center">
-                        <Link
-                          className="btn btn-sm btn-primary d-flex align-items-center justify-content-center p-2"
-                          to={`/report-detail/${report._id}`}
-                        >
-                          <AiOutlineEye />
-                        </Link>
-                        <Button
-                          className="btn btn-sm btn-danger d-flex align-items-center justify-content-center p-2"
-                          onClick={() => deleteModalShowHandler(report._id)}
-                        >
-                          <HiOutlineTrash />
-                        </Button>
-                        {isDeleteModalOpen && (
-                          <DeleteReportModal
-                            onShow={isDeleteModalOpen}
-                            onClose={deleteModalCloseHandler}
-                          />
-                        )}
-                      </div>
-                    </td> */}
                   </tr>
                 );
               })}

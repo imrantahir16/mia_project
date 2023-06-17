@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../api/axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,11 +31,14 @@ const UserDetailPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.accessToken}`,
-    },
-  };
+  const config = useMemo(() => {
+    return {
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    };
+  }, [user]);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -50,7 +53,7 @@ const UserDetailPage = () => {
       }
     };
     fetchUser();
-  }, []);
+  }, [params.id, config]);
 
   useEffect(() => {
     const fetchPlan = async () => {
@@ -61,21 +64,21 @@ const UserDetailPage = () => {
     if (selectedUser._id) {
       fetchPlan();
     }
-  }, [selectedUser._id]);
+  }, [selectedUser._id, config]);
 
   const updateHandler = async () => {
     let userData;
     setIsEditEnabled(false);
     // console.log(selectedUser);
-    const { policeId } = selectedUser;
+    const { policyId } = selectedUser;
     if (userType === "admin") {
       userData = {
-        policeId,
+        policyId,
         adminCode: 5051,
       };
     } else {
       userData = {
-        policeId,
+        policyId,
       };
     }
 
@@ -261,21 +264,21 @@ const UserDetailPage = () => {
                 />
               </Col>
               <Col>
-                <label className="ms-2 mb-2" htmlFor="inputPoliceId">
-                  Police ID
+                <label className="ms-2 mb-2" htmlFor="inputPolicyId">
+                  Policy ID
                 </label>
                 <InputGroup>
                   <Form.Control
-                    id="inputPoliceId"
-                    aria-label="policeId"
+                    id="inputPolicyId"
+                    aria-label="policyId"
                     type="text"
-                    value={`${selectedUser?.policeId || ""}`}
+                    value={`${selectedUser?.policyId || ""}`}
                     disabled={!isEditEnabled}
                     onChange={(e) => {
                       setSelectedUser((currentUser) => {
                         return {
                           ...currentUser,
-                          policeId: e.target.value,
+                          policyId: e.target.value,
                         };
                       });
                     }}

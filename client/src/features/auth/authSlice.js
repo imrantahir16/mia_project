@@ -63,7 +63,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     if (!res) return thunkAPI.rejectWithValue("Unauthorized User");
     return res;
   } catch (error) {
-    // console.log("thunk", error);
+    console.log("thunk", error);
     const message =
       (error.response && error.response.data && error.response.data.message) ||
       error.response.data.errors[0].msg;

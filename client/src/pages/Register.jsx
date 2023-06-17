@@ -100,6 +100,7 @@ const Register = () => {
     }
 
     dispatch(reset());
+    return () => {};
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   return (

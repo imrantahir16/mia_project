@@ -19,6 +19,7 @@ const {
 router.route("/all").get(verifyRoles(ROLES_LIST.Admin), getAllUsers);
 
 router.route("/:id?").get(getUser).put(uploadHandler, updateProfile);
+router.route("/").delete(deleteUser);
 
 router
   .route("/:id?")

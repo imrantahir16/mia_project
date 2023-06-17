@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../api/axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,11 +30,13 @@ const ReportDetailPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.accessToken}`,
-    },
-  };
+  const config = useMemo(() => {
+    return {
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    };
+  }, [user]);
   const originalDate = new Date(report?.time);
   const formattedDate = originalDate.toLocaleDateString([], {
     month: "2-digit",
@@ -60,7 +62,7 @@ const ReportDetailPage = () => {
       }
     };
     fetchReport();
-  }, []);
+  }, [params.id, config]);
 
   const updateHandler = async () => {
     setIsEditEnabled(false);
@@ -294,6 +296,20 @@ const ReportDetailPage = () => {
                       };
                     })
                   }
+                />
+              </Col>
+              <Col>
+                <label className="ms-2 mb-2" htmlFor="inputPolicy">
+                  Policy ID
+                </label>
+                <input
+                  type="text"
+                  className={`form-control`}
+                  id="inputPolicy"
+                  placeholder="Policy ID"
+                  value={report?.policyId || ""}
+                  disabled
+                  onChange={(e) => {}}
                 />
               </Col>
             </Row>

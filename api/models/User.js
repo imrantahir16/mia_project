@@ -72,7 +72,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    policeId: {
+    policyId: {
       type: String,
       default: "",
     },

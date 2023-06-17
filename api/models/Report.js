@@ -12,6 +12,10 @@ const reportSchema = new Schema(
       type: String,
       default: "",
     },
+    policyId: {
+      type: String,
+      default: "",
+    },
     location: {
       description: {
         type: String,
