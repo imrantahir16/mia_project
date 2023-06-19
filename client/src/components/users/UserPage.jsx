@@ -8,12 +8,10 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import { HiOutlineTrash } from "react-icons/hi";
-import { FiEdit } from "react-icons/fi";
-import { BiSave } from "react-icons/bi";
-import DeleteUserModal from "./DeleteUserModal";
 import { setDeletingId } from "../../features/users/userSlice";
 import InputGroup from "react-bootstrap/InputGroup";
 import { toast } from "react-toastify";
+import DeleteAccountModal from "./DeleteAccountModal";
 
 const UserDetailPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -41,7 +39,7 @@ const UserDetailPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`api/users/`, config);
+        const response = await axios.get(`api/users`, config);
         // console.log(response);
         setSelectedUser(response.data);
       } catch (error) {
@@ -80,7 +78,8 @@ const UserDetailPage = () => {
               <span className="ms-1">Delete</span>
             </Button>
             {isDeleteModalOpen && (
-              <DeleteUserModal
+              <DeleteAccountModal
+                token={user?.accessToken}
                 onShow={isDeleteModalOpen}
                 onClose={deleteModalCloseHandler}
               />
