@@ -49,12 +49,16 @@ const getSubscribedPlan = async (req, res) => {
     return res.json(plan);
   }
 
+  // console.log(subscriptions);
   plan = {
     subscriptionId: subscriptions.data[0].id,
     planId: subscriptions.data[0].plan.id,
     planName: subscriptions.data[0].plan.nickname,
     status: subscriptions.data[0].status,
     isSubscribed: subscriptions.data[0].status === "active" ? true : false,
+    startData: subscriptions.data[0].start_date,
+    currentPeriodStart: subscriptions.data[0].current_period_start,
+    currentPeriodEnd: subscriptions.data[0].current_period_end,
   };
 
   res.status(200).json(plan);

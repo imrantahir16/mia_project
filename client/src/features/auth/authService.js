@@ -23,8 +23,9 @@ const login = async (userData) => {
     return response.data;
   } else {
     // console.log(response.data);
-    // return response.data;
-    return null;
+    localStorage.setItem("user", JSON.stringify(response.data));
+    return response.data;
+    // return null;
   }
 
   // console.log(response);

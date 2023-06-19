@@ -31,7 +31,7 @@ const Header = () => {
             <Offcanvas.Title id={`offcanvasNavbarLabel`}></Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            {checkUserRoles(user) && (
+            {user?.user?.roles.hasOwnProperty("Admin") ? (
               <Nav className="d-flex align-items-center justify-content-center justify-content-md-end flex-grow-1 pe-3">
                 <a className="nav-link" aria-current="page" href="/">
                   Home
@@ -63,7 +63,22 @@ const Header = () => {
                   Logout
                 </button>
               </Nav>
-            )}
+            ) : user?.user?.roles.hasOwnProperty("User") ? (
+              <Nav className="d-flex align-items-center justify-content-center justify-content-md-end flex-grow-1 pe-3">
+                <a className="nav-link" aria-current="page" href="/">
+                  Home
+                </a>
+                <a className="nav-link" href={`/user`}>
+                  User
+                </a>
+                <button
+                  className="btn btn-primary ms-0 ms-md-4"
+                  onClick={logoutHandler}
+                >
+                  Logout
+                </button>
+              </Nav>
+            ) : null}
           </Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>

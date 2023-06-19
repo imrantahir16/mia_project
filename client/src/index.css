@@ -38,6 +38,16 @@ img {
   object-fit: cover;
 }
 
+.home_logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.home_logo > img {
+  width: 150px;
+  aspect-ratio: 1;
+}
 .logo {
   max-height: 50px;
 }

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import Logo from "../components/common/Logo";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -14,24 +15,17 @@ const Home = () => {
   }, [user, navigate]);
 
   return (
-    <section className="">
+    <section className="text-center mt-5">
       <Container>
-        <h1 className="">Welcome to home page</h1>
-        <div className="">
+        <h1 className="">Welcome to My Insurance App</h1>
+        <div className="mt-3">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla nobis
-            aperiam asperiores et dignissimos inventore minus, reprehenderit
-            atque, distinctio alias iste ratione, dolor autem quos culpa
-            recusandae assumenda omnis dolorum quod adipisci debitis maxime
-            deserunt quibusdam natus. Quas nesciunt, cupiditate ipsum quae sunt,
-            nemo, voluptas dicta non impedit assumenda alias minima atque eaque
-            in. Dicta delectus veritatis magnam dolores sapiente repellendus
-            optio officia eos repudiandae molestias corrupti ipsam ducimus error
-            omnis dignissimos, iure quia autem nam similique. Mollitia est
-            consequatur delectus? Nemo ad molestias minus alias accusantium
-            neque? Distinctio dignissimos delectus deleniti laborum adipisci,
-            itaque quidem. Illo ratione ex provident.
+            Your all-in-one solution for hassle-free insurance management for
+            autos.
           </p>
+          <div className="home_logo">
+            <img src="/mia_logo.png" alt="logo" />
+          </div>
         </div>
       </Container>
     </section>

@@ -45,9 +45,12 @@ const billingPortal = async (req, res) => {
   const user = await User.findOne({ _id: req.userId });
   const customerId = user.stripeCustomerId;
 
-  const portalSession = await stripe.billingPortal.sessions.create({
-    customer: customerId,
-  });
+  const portalSession = await stripe.billingPortal.sessions.create(
+    {
+      customer: customerId,
+    },
+    { apiKey: process.env.STRIPE_SECRET_KEY }
+  );
 
   res.json(portalSession);
 };

@@ -15,11 +15,13 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import PrivacyPolicies from "./pages/PrivacyPolicies";
 import RequireAuth from "./components/RequiredAuth";
 import UserDetailPage from "./components/users/UserDetailPage";
+import UserPage from "./components/users/UserPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReportDetailPage from "./components/reports/ReportDetailPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyAccount from "./pages/VerifyAccount";
+
 function App() {
   return (
     <>
@@ -34,8 +36,9 @@ function App() {
 
         {/* protected Routes */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="user" element={<UserPage />} />
           <Route element={<RequireAuth />}>
-            <Route path="/" element={<Home />} />
             <Route path="emergencies" element={<Emergencies />} />
             <Route path="tows" element={<Tows />} />
             <Route path="mechanics" element={<Mechanics />} />
@@ -43,10 +46,6 @@ function App() {
             <Route path="user-detail/:id" element={<UserDetailPage />} />
             <Route path="reports" element={<Reports />} />
             <Route path="report-detail/:id" element={<ReportDetailPage />} />
-
-            {/* <Route path="/plans" element={<Plans />} />
-          <Route path="/subscription" element={<Subscription />} />
-          <Route path="/subscription/completion" element={<Completion />} /> */}
           </Route>
         </Route>
         <Route path="*" element={<Missing />} />
