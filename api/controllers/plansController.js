@@ -50,6 +50,16 @@ const getSubscribedPlan = async (req, res) => {
   }
 
   // console.log(subscriptions);
+  if (Math.floor(Date.now() / 1000) > subscriptions.data[0].cancel_at) {
+    user.isSubscribed = false;
+    user.subscribedPlanId = "";
+    await user.save();
+    plan = {
+      isSubscribed: false,
+    };
+    return res.json(plan);
+  }
+
   plan = {
     subscriptionId: subscriptions.data[0].id,
     planId: subscriptions.data[0].plan.id,
